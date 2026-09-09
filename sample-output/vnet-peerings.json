@@ -1,0 +1,28 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-network-hub",
+    "localVnet": "vnet-hub",
+    "location": "eastus",
+    "peeringName": "hub-to-app",
+    "peeringState": "Connected",
+    "remoteVnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app",
+    "allowForwardedTraffic": "True",
+    "allowGatewayTransit": "True",
+    "useRemoteGateways": "False",
+    "id": "peer1"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "localVnet": "vnet-app",
+    "location": "eastus",
+    "peeringName": "app-to-hub",
+    "peeringState": "Connected",
+    "remoteVnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub",
+    "allowForwardedTraffic": "False",
+    "allowGatewayTransit": "False",
+    "useRemoteGateways": "True",
+    "id": "peer2"
+  }
+]

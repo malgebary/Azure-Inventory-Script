@@ -1,0 +1,6 @@
+"subscriptionId","subscriptionName","DisplayName","SignInName","ObjectType","ObjectId","RoleDefinitionName","Scope"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","Cloud Platform Team","","Group","a1b2c3d4-0001-4000-8000-000000000001","Owner","/subscriptions/11111111-1111-1111-1111-111111111111"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","Jane Admin","jane.admin@contoso.com","User","a1b2c3d4-0001-4000-8000-000000000002","Contributor","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","Reader-Auditors","","Group","a1b2c3d4-0001-4000-8000-000000000003","Reader","/subscriptions/11111111-1111-1111-1111-111111111111"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","id-storefront-app","","ServicePrincipal","a1b2c3d4-0001-4000-8000-000000000004","Key Vault Secrets User","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","CSP-Partner-Admins","","ForeignGroup","a1b2c3d4-0001-4000-8000-000000000005","Owner","/subscriptions/11111111-1111-1111-1111-111111111111"

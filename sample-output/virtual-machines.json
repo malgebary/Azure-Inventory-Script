@@ -1,0 +1,62 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "vm-web-01",
+    "location": "eastus",
+    "vmSize": "Standard_D4s_v5",
+    "osType": "Windows",
+    "powerState": "VM running",
+    "licenseType": "Windows_Server",
+    "zones": "1",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-web-01"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "vm-web-02",
+    "location": "eastus",
+    "vmSize": "Standard_D4s_v5",
+    "osType": "Windows",
+    "powerState": "VM running",
+    "licenseType": "Windows_Server",
+    "zones": "2",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-web-02"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "vm-app-01",
+    "location": "eastus",
+    "vmSize": "Standard_D8s_v5",
+    "osType": "Linux",
+    "powerState": "VM running",
+    "licenseType": "",
+    "zones": "1",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-app-01"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "vm-sql-01",
+    "location": "eastus",
+    "vmSize": "Standard_E8s_v5",
+    "osType": "Windows",
+    "powerState": "VM running",
+    "licenseType": "Windows_Server",
+    "zones": "1",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Compute/virtualMachines/vm-sql-01"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-infra",
+    "name": "vm-dc-01",
+    "location": "eastus",
+    "vmSize": "Standard_D2s_v5",
+    "osType": "Windows",
+    "powerState": "VM running",
+    "licenseType": "Windows_Server",
+    "zones": "1",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra/providers/Microsoft.Compute/virtualMachines/vm-dc-01"
+  }
+]

@@ -1,0 +1,27 @@
+# Squad: ignore runtime state (logs, inbox, sessions)
+.squad/orchestration-log/
+.squad/log/
+.squad/decisions/inbox/
+.squad/sessions/
+.squad/.scratch/
+# Squad: SubSquad activation file (local to this machine)
+.squad-workstream
+
+# --- Azure Inventory Script ---
+# NEVER commit real inventory output: contains live resource names, IPs,
+# principal IDs, and RBAC assignments from the customer/your tenant.
+azure-a2a-inventory-*/
+azure-inventory-*/
+*-run-summary.json
+
+# Demo/sample output IS safe to commit (fabricated data) — do not ignore:
+!sample-output/
+!sample-output/**
+
+# --- Squad / agent-framework scaffolding (not part of the deliverable) ---
+.copilot/
+.squad/
+.squad-workstream
+.github/agents/
+.github/workflows/squad-*.yml
+.github/workflows/sync-squad-labels.yml

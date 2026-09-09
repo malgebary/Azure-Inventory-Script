@@ -1,0 +1,52 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "DisplayName": "Cloud Platform Team",
+    "SignInName": "",
+    "ObjectType": "Group",
+    "ObjectId": "a1b2c3d4-0001-4000-8000-000000000001",
+    "RoleDefinitionName": "Owner",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "DisplayName": "Jane Admin",
+    "SignInName": "jane.admin@contoso.com",
+    "ObjectType": "User",
+    "ObjectId": "a1b2c3d4-0001-4000-8000-000000000002",
+    "RoleDefinitionName": "Contributor",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "DisplayName": "Reader-Auditors",
+    "SignInName": "",
+    "ObjectType": "Group",
+    "ObjectId": "a1b2c3d4-0001-4000-8000-000000000003",
+    "RoleDefinitionName": "Reader",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "DisplayName": "id-storefront-app",
+    "SignInName": "",
+    "ObjectType": "ServicePrincipal",
+    "ObjectId": "a1b2c3d4-0001-4000-8000-000000000004",
+    "RoleDefinitionName": "Key Vault Secrets User",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "DisplayName": "CSP-Partner-Admins",
+    "SignInName": "",
+    "ObjectType": "ForeignGroup",
+    "ObjectId": "a1b2c3d4-0001-4000-8000-000000000005",
+    "RoleDefinitionName": "Owner",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111"
+  }
+]
