@@ -68,27 +68,38 @@ Install-Module Az.Accounts, Az.ResourceGraph, Az.Resources, Az.OperationalInsigh
 
 ## How to run
 
-### 1. Sign in
+### 1. Get the script
+
+Clone the repo (this creates a folder named `Azure-Inventory-Script`) and change into it:
+
+```powershell
+git clone https://github.com/malgebary/Azure-Inventory-Script.git
+cd Azure-Inventory-Script
+```
+
+> Prefer not to use git? On the GitHub page choose **Code → Download ZIP**, extract it,
+> then `cd` into the extracted folder. All commands below are run from inside that folder.
+
+### 2. Sign in
 
 The script signs you in automatically. If the interactive browser popup crashes your
 terminal (a known issue in some VS Code / WAM setups), use **device-code auth** with
 the `-UseDeviceAuthentication` switch — it prints a URL + code instead of a popup.
 
-### 2. Basic inventory
+### 3. Basic inventory
 
 ```powershell
-cd "path\to\Azure-Inventory-Script"
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>" -UseDeviceAuthentication
 ```
 
-### 3. Inventory + RBAC + policy
+### 4. Inventory + RBAC + policy
 
 ```powershell
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>" -UseDeviceAuthentication `
     -IncludeRoleAssignments -IncludePolicyAssignments
 ```
 
-### 4. Inventory + **dependencies** (the full picture)
+### 5. Inventory + **dependencies** (the full picture)
 
 ```powershell
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>" -UseDeviceAuthentication `
