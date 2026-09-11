@@ -184,12 +184,32 @@ LDAP `389`, Kerberos `88`). Correlate destination IPs back to `virtual-machines.
 
 ---
 
-## Data handling
+## Your data stays local
 
-The generated `azure-a2a-inventory-*` output contains **live environment data**
-(resource names, IPs, principal IDs, RBAC). The included `.gitignore` prevents these
-folders from being committed. **Do not commit real output to a public repository.** The
-`sample-output/` folder is fabricated and safe to share.
+**Running this script does not send your information anywhere.** When you run it, the
+results are written **only to a folder on the machine you run it from**
+(`azure-a2a-inventory-<timestamp>`). The script is **read-only** against Azure and:
+
+- **Does not upload anything** — no results are sent to GitHub, to the script's author,
+  or to any third party. There is no telemetry and nothing "phones home."
+- **Cannot write back to this repository** — cloning or downloading only *pulls* the
+  script to you. Pushing to this public repo would require the owner's credentials,
+  which you don't have.
+- **Ignores its own output in git** — the included `.gitignore` excludes
+  `azure-a2a-inventory-*` folders, so even if you run the script inside your local clone,
+  the output is never tracked or committed by accident.
+
+### What the output contains — treat it as confidential
+
+The output holds **no passwords or secrets**, but it does contain **sensitive metadata**:
+resource names, IP addresses, principal/object IDs, and RBAC role assignments. Handle it
+like any internal document:
+
+- **Do not** commit real output to a public repository.
+- **Do not** paste it into public locations or share it over insecure channels.
+- Store and share it only through your organization's approved, access-controlled means.
+
+The `sample-output/` folder is **fabricated** demo data and is safe to share.
 
 ---
 
