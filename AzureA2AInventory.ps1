@@ -50,9 +50,16 @@ Sign in with device-code flow (prints a URL + code) instead of the interactive
 browser popup. Use this when the browser popup crashes the terminal or in
 headless/remote sessions. Enter the code promptly at https://login.microsoft.com/device.
 
+.PARAMETER IncludeStorageLinks
+Export configured storage relationships (`storage-links`): resources whose
+CONFIGURATION points at a storage account -- SQL auditing / vulnerability-assessment
+targets, VM boot diagnostics, function/web app storage, diagnostic destinations, etc.
+This is a config relationship, not observed traffic. PaaS-internal DB->storage is not
+observable and won't appear.
+
 .PARAMETER IncludeDependencies
-Convenience switch that enables BOTH -IncludeVmInsightsConnections and
--IncludeAppInsightsDependencies at once.
+Convenience switch that enables -IncludeVmInsightsConnections,
+-IncludeAppInsightsDependencies, and -IncludeStorageLinks at once.
 
 .EXAMPLE
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>"
@@ -72,6 +79,7 @@ param(
     [switch]$IncludePolicyAssignments,
     [switch]$IncludeVmInsightsConnections,
     [switch]$IncludeAppInsightsDependencies,
+    [switch]$IncludeStorageLinks,
     [switch]$IncludeDependencies,
     [switch]$UseDeviceAuthentication,
     [int]$LookbackDays = 30
@@ -79,10 +87,12 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# -IncludeDependencies is a convenience switch that turns on BOTH dependency exports.
+# -IncludeDependencies is a convenience switch that turns on BOTH dependency exports
+# plus configured storage links.
 if ($IncludeDependencies) {
     $IncludeVmInsightsConnections   = $true
     $IncludeAppInsightsDependencies = $true
+    $IncludeStorageLinks            = $true
 }
 
 function Test-RequiredModule {
@@ -332,6 +342,72 @@ Resources
           workspaceResourceId = tostring(properties.WorkspaceResourceId), id
 | order by subscriptionId, resourceGroup, name
 "@
+
+  "storage-accounts" = @"
+Resources
+| where type =~ 'microsoft.storage/storageaccounts'
+| project subscriptionId, resourceGroup, name, location,
+          sku = tostring(sku.name), kind,
+          accessTier = tostring(properties.accessTier),
+          publicNetworkAccess = tostring(properties.publicNetworkAccess),
+          allowBlobPublicAccess = tostring(properties.allowBlobPublicAccess),
+          supportsHttpsTrafficOnly = tostring(properties.supportsHttpsTrafficOnly),
+          minimumTlsVersion = tostring(properties.minimumTlsVersion),
+          isHnsEnabled = tostring(properties.isHnsEnabled),
+          primaryLocation = tostring(properties.primaryLocation),
+          tags = tostring(tags), id
+| order by subscriptionId, resourceGroup, name
+"@
+
+  "databases" = @"
+Resources
+| where type in~ (
+    'microsoft.sql/servers/databases',
+    'microsoft.sql/servers/elasticpools',
+    'microsoft.sql/managedinstances',
+    'microsoft.sql/managedinstances/databases',
+    'microsoft.documentdb/databaseaccounts',
+    'microsoft.dbforpostgresql/servers',
+    'microsoft.dbforpostgresql/flexibleservers',
+    'microsoft.dbformysql/servers',
+    'microsoft.dbformysql/flexibleservers',
+    'microsoft.dbformariadb/servers',
+    'microsoft.cache/redis',
+    'microsoft.sqlvirtualmachine/sqlvirtualmachines')
+| where type !~ 'microsoft.sql/servers/databases' or name !endswith '/master'
+| project subscriptionId, resourceGroup, name, type, location,
+          sku = tostring(sku.name), tier = tostring(sku.tier),
+          kind,
+          publicNetworkAccess = tostring(properties.publicNetworkAccess),
+          version = tostring(properties.version),
+          tags = tostring(tags), id
+| order by subscriptionId, resourceGroup, type, name
+"@
+
+  "app-services-and-serverless" = @"
+Resources
+| where type in~ (
+    'microsoft.web/sites',
+    'microsoft.web/serverfarms',
+    'microsoft.web/staticsites',
+    'microsoft.web/hostingenvironments',
+    'microsoft.logic/workflows',
+    'microsoft.app/containerapps',
+    'microsoft.app/managedenvironments',
+    'microsoft.apimanagement/service',
+    'microsoft.containerregistry/registries',
+    'microsoft.containerinstance/containergroups')
+| extend appKind = tostring(kind)
+| extend appServicePlanId = tostring(properties.serverFarmId)
+| project subscriptionId, resourceGroup, name, type, location,
+          appKind,
+          sku = tostring(sku.name), tier = tostring(sku.tier),
+          state = tostring(properties.state),
+          httpsOnly = tostring(properties.httpsOnly),
+          defaultHostName = tostring(properties.defaultHostName),
+          appServicePlanId, tags = tostring(tags), id
+| order by subscriptionId, resourceGroup, type, name
+"@
 }
 
 Write-Host "Exporting inventory (Resource Graph)..."
@@ -362,6 +438,61 @@ if ($IncludePolicyAssignments) {
                           Name, DisplayName, PolicyDefinitionId, Scope, EnforcementMode
     }
     Export-Object -Name "policy-assignments" -Data $policyAssignments
+}
+
+# ---- Optional: Configured storage links (e.g. DB/VM/app -> storage account) ----
+# Surfaces resources whose CONFIGURATION references a storage account: SQL auditing
+# and vulnerability-assessment targets, VM boot diagnostics, function/web app storage,
+# diagnostic destinations embedded in properties, etc. This is a CONFIG relationship,
+# not observed traffic. PaaS-internal DB->storage (e.g. Azure SQL DB internals) is not
+# observable and won't appear.
+if ($IncludeStorageLinks) {
+    Write-Host "Exporting configured storage links..."
+
+    # Pass 1: SQL server/database auditing & vulnerability-assessment storage targets.
+    $sqlStorageQuery = @"
+Resources
+| where type in~ (
+    'microsoft.sql/servers/auditingsettings',
+    'microsoft.sql/servers/databases/auditingsettings',
+    'microsoft.sql/servers/vulnerabilityassessments',
+    'microsoft.sql/servers/databases/vulnerabilityassessments',
+    'microsoft.sql/servers/extendedauditingsettings',
+    'microsoft.sql/servers/databases/extendedauditingsettings')
+| extend state = tostring(properties.state)
+| extend storageEndpoint = tostring(properties.storageEndpoint)
+| extend storageContainerPath = tostring(properties.storageContainerPath)
+| where isnotempty(storageEndpoint) or isnotempty(storageContainerPath)
+| extend referencedStorageHost = extract(@'(?i)https?://([a-z0-9]+)\.(blob|dfs|file|queue|table)\.', 1, storageEndpoint)
+| project subscriptionId, resourceGroup, name, type, source = 'SQL audit/VA config',
+          state, referencedStorageHost,
+          storageEndpoint, storageContainerPath,
+          referencedStorageAccountId = '', id
+| order by subscriptionId, resourceGroup, type, name
+"@
+
+    # Pass 2: Any resource whose properties reference a storage account
+    # (boot diagnostics, function/web app storage, automation, diagnostic destinations,
+    # Event Grid system topics, etc.). Excludes storage accounts referencing themselves.
+    $genericStorageQuery = @"
+Resources
+| where type !in~ ('microsoft.storage/storageaccounts')
+| extend p = tostring(properties)
+| where p has 'core.windows.net' or p has '/providers/Microsoft.Storage/storageAccounts/'
+| extend referencedStorageHost = extract(@'(?i)([a-z0-9]+)\.(blob|dfs|file|queue|table)\.core\.windows\.net', 1, p)
+| extend referencedStorageAccountId = extract(@'(?i)(/subscriptions/[^\"]+?/providers/Microsoft\.Storage/storageAccounts/[^\"/]+)', 1, p)
+| where isnotempty(referencedStorageHost) or isnotempty(referencedStorageAccountId)
+| project subscriptionId, resourceGroup, name, type, source = 'referenced in resource properties',
+          state = '', referencedStorageHost,
+          storageEndpoint = '', storageContainerPath = '',
+          referencedStorageAccountId, id
+| order by subscriptionId, resourceGroup, type, name
+"@
+
+    $storageLinks = New-Object System.Collections.Generic.List[object]
+    foreach ($row in (Invoke-ResourceGraphQueryAll -Query $sqlStorageQuery     -SubscriptionIds $subscriptionIds)) { $storageLinks.Add($row) }
+    foreach ($row in (Invoke-ResourceGraphQueryAll -Query $genericStorageQuery -SubscriptionIds $subscriptionIds)) { $storageLinks.Add($row) }
+    Export-Object -Name "storage-links" -Data $storageLinks.ToArray()
 }
 
 # ---- Optional: VM Insights connections (who-talks-to-who) ----
@@ -466,6 +597,7 @@ $summary = [pscustomobject]@{
     policyAssignments = [bool]$IncludePolicyAssignments
     vmInsights        = [bool]$IncludeVmInsightsConnections
     appInsights       = [bool]$IncludeAppInsightsDependencies
+    storageLinks      = [bool]$IncludeStorageLinks
 }
 $summary | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputPath "run-summary.json") -Encoding UTF8
 

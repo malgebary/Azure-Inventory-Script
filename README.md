@@ -14,15 +14,26 @@ VM Insights and Application Insights.
 ## What it collects
 
 Every run produces a timestamped folder (`azure-a2a-inventory-<date>-<time>`) with
-one **CSV + JSON** file per dataset:
+one **CSV + JSON** file per dataset.
+
+> **Completeness:** `resources.csv` is the **complete, unfiltered inventory** — *every*
+> resource of *every* type in scope, straight from Azure Resource Graph (nothing is
+> excluded or hard-coded to a known list). The other files are **focused views** on top
+> of that same data — dedicated sheets for the resource classes that matter most in a
+> migration (storage, databases, app services/serverless, networking, identity). If a
+> resource type doesn't have its own sheet, it is still present in `resources.csv`, and
+> `resource-summary-by-type.csv` gives you the by-type counts to verify nothing is missed.
 
 | File | What it contains |
 | --- | --- |
 | `management-groups`, `management-group-hierarchy` | Management group tree |
 | `subscriptions` | All enabled subscriptions in the tenant |
 | `resource-groups` | Every resource group |
-| `resources` | Every resource (name, type, location, SKU, tags) |
+| `resources` | Every resource (name, type, location, SKU, tags) — **the complete, unfiltered inventory** |
 | `resource-summary-by-type` | Resource counts by type per subscription |
+| `storage-accounts` | Storage accounts — SKU, kind, access tier, public access, HTTPS-only, TLS, hierarchical namespace |
+| `databases` | SQL DB / elastic pools / Managed Instance, Cosmos DB, PostgreSQL, MySQL, MariaDB, Redis, SQL-on-VM |
+| `app-services-and-serverless` | App Service, App Service Plans, Functions, Static Web Apps, Logic Apps, Container Apps + environments, API Management, ACR, Container Instances |
 | `virtual-machines`, `disks` | VM size/OS/power state/license; disk SKU/size |
 | `networking` | VNets, NICs, NSGs, route tables, firewalls, gateways, ER circuits, public IPs |
 | `vnets-subnets` | VNet address spaces and subnets |
@@ -36,6 +47,7 @@ one **CSV + JSON** file per dataset:
 | `policy-assignments` *(optional)* | Azure Policy assignments |
 | `vm-insights-connections` *(optional)* | **VM-to-VM traffic** — server "who talks to who" |
 | `app-insights-dependencies` *(optional)* | **App → backend calls** (SQL, HTTP, storage, queues) |
+| `storage-links` *(optional)* | **Configured storage relationships** — resources (SQL auditing, VM boot diagnostics, apps, Event Grid, etc.) whose config points at a storage account |
 
 ---
 
@@ -60,6 +72,7 @@ Install-Module Az.Accounts, Az.ResourceGraph, Az.Resources, Az.OperationalInsigh
 | Policy assignments (`-IncludePolicyAssignments`) | **Reader** |
 | VM Insights connections (`-IncludeVmInsightsConnections`) | **Log Analytics Reader** on the workspaces |
 | App Insights dependencies (`-IncludeAppInsightsDependencies`) | **Monitoring Reader** on the App Insights components |
+| Storage links (`-IncludeStorageLinks`) | **Reader** (uses Resource Graph only) |
 
 > **Tip:** Assigning **Reader on the tenant root management group** is the cleanest way
 > to guarantee the script sees every current and future subscription in one run.
@@ -106,9 +119,9 @@ the `-UseDeviceAuthentication` switch — it prints a URL + code instead of a po
     -IncludeDependencies -LookbackDays 30
 ```
 
-`-IncludeDependencies` is a convenience switch that turns on **both**
-`-IncludeVmInsightsConnections` and `-IncludeAppInsightsDependencies`. You can also
-pass either one individually.
+`-IncludeDependencies` is a convenience switch that turns on
+`-IncludeVmInsightsConnections`, `-IncludeAppInsightsDependencies`, **and**
+`-IncludeStorageLinks`. You can also pass any of them individually.
 
 ### Don't know your tenant ID?
 
@@ -131,7 +144,8 @@ Get-AzSubscription | Select-Object Name, Id, TenantId, State
 | `-IncludePolicyAssignments` | Also export Azure Policy assignments. |
 | `-IncludeVmInsightsConnections` | Export VM-to-VM traffic from VM Insights. |
 | `-IncludeAppInsightsDependencies` | Export app→backend calls from Application Insights. |
-| `-IncludeDependencies` | Convenience switch: enables **both** dependency exports. |
+| `-IncludeStorageLinks` | Export configured storage relationships (config-based, not traffic). |
+| `-IncludeDependencies` | Convenience switch: enables VM Insights, App Insights, **and** storage-links exports. |
 | `-LookbackDays` | Days of monitoring data to pull for dependencies. Default `30`. |
 
 ---
