@@ -586,6 +586,90 @@ dependencies
     Export-Object -Name "app-insights-dependencies" -Data $allDeps.ToArray()
 }
 
+# ---- Completeness reconciliation (always runs) ----
+# Proves nothing is missed: compares the authoritative per-type resource counts from
+# Azure Resource Graph against what the export captured, and flags every resource type
+# that only lands in the catch-all resources.csv (i.e. has no dedicated sheet).
+Write-Host "Building completeness reconciliation..."
+
+# Map resource TYPE (lowercase) -> the dedicated sheet that captures it.
+$typeToSheet = @{}
+'microsoft.storage/storageaccounts' | ForEach-Object { $typeToSheet[$_] = 'storage-accounts' }
+@(
+    'microsoft.sql/servers/databases','microsoft.sql/servers/elasticpools',
+    'microsoft.sql/managedinstances','microsoft.sql/managedinstances/databases',
+    'microsoft.documentdb/databaseaccounts','microsoft.dbforpostgresql/servers',
+    'microsoft.dbforpostgresql/flexibleservers','microsoft.dbformysql/servers',
+    'microsoft.dbformysql/flexibleservers','microsoft.dbformariadb/servers',
+    'microsoft.cache/redis','microsoft.sqlvirtualmachine/sqlvirtualmachines'
+) | ForEach-Object { $typeToSheet[$_] = 'databases' }
+@(
+    'microsoft.web/sites','microsoft.web/serverfarms','microsoft.web/staticsites',
+    'microsoft.web/hostingenvironments','microsoft.logic/workflows',
+    'microsoft.app/containerapps','microsoft.app/managedenvironments',
+    'microsoft.apimanagement/service','microsoft.containerregistry/registries',
+    'microsoft.containerinstance/containergroups'
+) | ForEach-Object { $typeToSheet[$_] = 'app-services-and-serverless' }
+$typeToSheet['microsoft.compute/virtualmachines'] = 'virtual-machines'
+$typeToSheet['microsoft.compute/disks'] = 'disks'
+@(
+    'microsoft.network/virtualnetworks','microsoft.network/networkinterfaces',
+    'microsoft.network/networksecuritygroups','microsoft.network/routetables',
+    'microsoft.network/azurefirewalls','microsoft.network/applicationgateways',
+    'microsoft.network/loadbalancers','microsoft.network/publicipaddresses',
+    'microsoft.network/privateendpoints','microsoft.network/privatednszones',
+    'microsoft.network/virtualnetworkgateways','microsoft.network/expressroutecircuits',
+    'microsoft.network/connections'
+) | ForEach-Object { $typeToSheet[$_] = 'networking' }
+$typeToSheet['microsoft.keyvault/vaults'] = 'key-vaults'
+$typeToSheet['microsoft.operationalinsights/workspaces'] = 'log-analytics-workspaces'
+$typeToSheet['microsoft.insights/components'] = 'app-insights-components'
+
+# Authoritative per-type counts straight from Resource Graph.
+$typeCounts = Invoke-ResourceGraphQueryAll -SubscriptionIds $subscriptionIds -Query @"
+Resources
+| summarize resourceCount = count() by type
+| order by resourceCount desc
+"@
+
+$reconciliation = foreach ($row in $typeCounts) {
+    $t = ([string]$row.type).ToLower()
+    $sheet = if ($typeToSheet.ContainsKey($t)) { $typeToSheet[$t] } else { '' }
+    [pscustomobject]@{
+        type              = $row.type
+        resourceCount     = $row.resourceCount
+        capturedInSheet   = if ($sheet) { $sheet } else { 'resources (catch-all only)' }
+        hasDedicatedSheet = [bool]$sheet
+    }
+}
+$reconciliation = @($reconciliation) | Sort-Object -Property @{e={$_.hasDedicatedSheet}}, @{e={$_.resourceCount};Descending=$true}
+Export-Object -Name "completeness-reconciliation" -Data $reconciliation
+
+# Totals + integrity check: does resources.csv hold exactly what Resource Graph reports?
+$totalResources     = ($typeCounts | Measure-Object -Property resourceCount -Sum).Sum
+$resourcesCsvPath    = Join-Path $OutputPath "resources.csv"
+$resourcesCsvCount   = if (Test-Path $resourcesCsvPath) { @(Import-Csv $resourcesCsvPath).Count } else { 0 }
+$catchAllOnlyTypes   = @($reconciliation | Where-Object { -not $_.hasDedicatedSheet })
+$catchAllOnlyCount   = ($catchAllOnlyTypes | Measure-Object -Property resourceCount -Sum).Sum
+
+$completeness = [pscustomobject]@{
+    totalResourceTypes        = @($typeCounts).Count
+    totalResources            = $totalResources
+    resourcesCsvRowCount      = $resourcesCsvCount
+    countsReconcile           = ($totalResources -eq $resourcesCsvCount)
+    typesWithDedicatedSheet   = @($reconciliation | Where-Object hasDedicatedSheet).Count
+    typesCatchAllOnly         = $catchAllOnlyTypes.Count
+    resourcesCatchAllOnly     = [int]$catchAllOnlyCount
+    note                      = "Every resource is in resources.csv. 'Catch-all only' types have no dedicated sheet but are fully present in resources.csv. If countsReconcile is true, resources.csv matches the Resource Graph total exactly."
+}
+$completeness | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputPath "completeness-summary.json") -Encoding UTF8
+
+Write-Host ("  Total resources: {0} across {1} types  (resources.csv rows: {2}, reconcile: {3})" -f `
+    $totalResources, @($typeCounts).Count, $resourcesCsvCount, $completeness.countsReconcile)
+if (-not $completeness.countsReconcile) {
+    Write-Warning "  resources.csv row count does not match the Resource Graph total. Review completeness-reconciliation.csv."
+}
+
 # ---- Summary ----
 $summary = [pscustomobject]@{
     tenantId          = $tenant
@@ -598,6 +682,8 @@ $summary = [pscustomobject]@{
     vmInsights        = [bool]$IncludeVmInsightsConnections
     appInsights       = [bool]$IncludeAppInsightsDependencies
     storageLinks      = [bool]$IncludeStorageLinks
+    totalResources    = $totalResources
+    countsReconcile   = $completeness.countsReconcile
 }
 $summary | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputPath "run-summary.json") -Encoding UTF8
 

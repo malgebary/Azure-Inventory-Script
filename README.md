@@ -26,7 +26,14 @@ one **CSV + JSON** file per dataset.
 > of that same data — dedicated sheets for the resource classes that matter most in a
 > migration (storage, databases, app services/serverless, networking, identity). If a
 > resource type doesn't have its own sheet, it is still present in `resources.csv`, and
-> `resource-summary-by-type.csv` gives you the by-type counts to verify nothing is missed.
+> the **completeness reconciliation** (below) proves it.
+>
+> **Completeness reconciliation (always produced):** `completeness-reconciliation.csv`
+> lists every resource type with its count and the sheet that captures it, explicitly
+> flagging types that live **only** in the catch-all `resources.csv`. `completeness-summary.json`
+> then reconciles the numbers: the total resource count from Resource Graph vs. the row
+> count in `resources.csv` (`countsReconcile: true` means they match exactly, so nothing
+> was dropped). This is the "are we capturing *everything*?" proof — not just a list.
 
 | File | What it contains |
 | --- | --- |
@@ -35,6 +42,7 @@ one **CSV + JSON** file per dataset.
 | `resource-groups` | Every resource group |
 | `resources` | Every resource (name, type, location, SKU, tags) — **the complete, unfiltered inventory** |
 | `resource-summary-by-type` | Resource counts by type per subscription |
+| `completeness-reconciliation` | Every resource type + count + which sheet captures it; flags catch-all-only types |
 | `storage-accounts` | Storage accounts — SKU, kind, access tier, public access, HTTPS-only, TLS, hierarchical namespace |
 | `databases` | SQL DB / elastic pools / Managed Instance, Cosmos DB, PostgreSQL, MySQL, MariaDB, Redis, SQL-on-VM |
 | `app-services-and-serverless` | App Service, App Service Plans, Functions, Static Web Apps, Logic Apps, Container Apps + environments, API Management, ACR, Container Instances |
