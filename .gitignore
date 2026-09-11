@@ -13,6 +13,9 @@
 azure-a2a-inventory-*/
 azure-inventory-*/
 *-run-summary.json
+# local test scratch folders
+_multitest/
+_wraptest/
 
 # Demo/sample output IS safe to commit (fabricated data) — do not ignore:
 !sample-output/

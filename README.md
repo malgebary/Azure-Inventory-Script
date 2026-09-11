@@ -1,13 +1,17 @@
 # Azure Inventory & Dependency Export
 
-A **read-only** PowerShell script that inventories an entire Azure tenant and
-(optionally) exports application and network **dependencies** — designed to prepare
-for an **Azure-to-Azure move** (tenant/subscription consolidation, CSP→EA, or
-landing-zone re-platforming).
+A **read-only** PowerShell tool that inventories your Azure estate — across one tenant or
+many — and (optionally) exports application, network, and storage **dependencies**.
+
+It's useful for any scenario where you need a clear, structured picture of what's in Azure
+and how it's connected: **Azure-to-Azure moves** (tenant/subscription consolidation,
+CSP→EA, landing-zone re-platforming), migration wave planning, governance and security
+reviews, cost/rightsizing prep, or simply keeping an accurate inventory.
 
 It does **not** install any agents, does **not** modify resources, and only reads
-metadata plus (optionally) monitoring data that is **already being collected** by
-VM Insights and Application Insights.
+resource metadata plus (optionally) monitoring data that is **already being collected** by
+VM Insights and Application Insights. Every organization's Azure footprint is different —
+run it, open the CSVs, and use whichever sheets are relevant to you.
 
 ---
 
@@ -99,20 +103,20 @@ The script signs you in automatically. If the interactive browser popup crashes 
 terminal (a known issue in some VS Code / WAM setups), use **device-code auth** with
 the `-UseDeviceAuthentication` switch — it prints a URL + code instead of a popup.
 
-### 3. Basic inventory
+### 3. Run it — Option A: a single tenant
 
 ```powershell
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>" -UseDeviceAuthentication
 ```
 
-### 4. Inventory + RBAC + policy
+Add RBAC + policy:
 
 ```powershell
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>" -UseDeviceAuthentication `
     -IncludeRoleAssignments -IncludePolicyAssignments
 ```
 
-### 5. Inventory + **dependencies** (the full picture)
+Add **dependencies** (the full picture):
 
 ```powershell
 .\AzureA2AInventory.ps1 -TenantId "<tenant-guid>" -UseDeviceAuthentication `
@@ -122,6 +126,23 @@ the `-UseDeviceAuthentication` switch — it prints a URL + code instead of a po
 `-IncludeDependencies` is a convenience switch that turns on
 `-IncludeVmInsightsConnections`, `-IncludeAppInsightsDependencies`, **and**
 `-IncludeStorageLinks`. You can also pass any of them individually.
+
+### 3b. Run it — Option B: multiple tenants in one go
+
+If your estate spans **several Entra tenants** (for example CSP-billed subscriptions in
+one tenant and your own subscriptions in another), use the multi-tenant wrapper. It runs
+the same inventory once per tenant, writes a separate output folder for each, and drops a
+`tenants-index.csv` summarizing every run. All the same switches are supported and passed
+through to each tenant.
+
+```powershell
+.\AzureA2AInventory-MultiTenant.ps1 `
+    -TenantIds "<tenant-1>","<tenant-2>","<tenant-3>" `
+    -UseDeviceAuthentication -IncludeRoleAssignments -IncludeDependencies
+```
+
+You'll be prompted to sign in **once per tenant** (device-code URL + code). If one tenant
+fails, the run continues and the failure is recorded in `tenants-index.csv`.
 
 ### Don't know your tenant ID?
 
@@ -153,9 +174,16 @@ Get-AzSubscription | Select-Object Name, Id, TenantId, State
 ## Multiple tenants (e.g. CSP subs + your own subs)
 
 The boundary that matters is the **Entra tenant**, not the billing model. CSP-billed and
-customer-billed subscriptions in the **same tenant** are captured in one run. If your
-subscriptions span **multiple tenants**, run the script once per tenant with a different
-`-TenantId` — each run writes its own timestamped folder, so nothing is overwritten.
+customer-billed subscriptions in the **same tenant** are captured in a single run. If your
+subscriptions span **multiple tenants**, you have two choices:
+
+- **Run `AzureA2AInventory.ps1` once per tenant** with a different `-TenantId` — each run
+  writes its own timestamped folder, so nothing is overwritten; or
+- **Use `AzureA2AInventory-MultiTenant.ps1`** (Option B above) to do them all in one
+  command. It writes one subfolder per tenant plus a `tenants-index.csv`, and keeps going
+  if a tenant fails.
+
+Either way, each tenant needs its own sign-in and its own **Reader** grant.
 
 ---
 
