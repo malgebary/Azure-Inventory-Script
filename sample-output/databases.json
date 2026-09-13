@@ -1,0 +1,58 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "sql-prod/StorefrontDb",
+    "type": "microsoft.sql/servers/databases",
+    "location": "eastus",
+    "sku": "S3",
+    "tier": "Standard",
+    "kind": "v12.0,user",
+    "publicNetworkAccess": "Disabled",
+    "version": "",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod/databases/StorefrontDb"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "cosmos-prod",
+    "type": "microsoft.documentdb/databaseaccounts",
+    "location": "eastus",
+    "sku": "",
+    "tier": "",
+    "kind": "GlobalDocumentDB",
+    "publicNetworkAccess": "Disabled",
+    "version": "",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.DocumentDB/databaseAccounts/cosmos-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "pg-prod",
+    "type": "microsoft.dbforpostgresql/flexibleservers",
+    "location": "eastus",
+    "sku": "Standard_D4s_v3",
+    "tier": "GeneralPurpose",
+    "kind": "",
+    "publicNetworkAccess": "Disabled",
+    "version": "15",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/pg-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "redis-prod",
+    "type": "microsoft.cache/redis",
+    "location": "eastus",
+    "sku": "Standard",
+    "tier": "",
+    "kind": "",
+    "publicNetworkAccess": "Disabled",
+    "version": "",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Cache/Redis/redis-prod"
+  }
+]

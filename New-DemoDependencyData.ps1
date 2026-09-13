@@ -14,6 +14,10 @@ you can preview exactly what the customer will see for:
   - managed-identities        (principal IDs)
   - virtual-machines          (context to correlate connection endpoints)
   - vnet-peerings             (structural connectivity context)
+  - storage-accounts          (storage inventory with config)
+  - databases                 (SQL / Cosmos / PostgreSQL / Redis)
+  - app-services-and-serverless (web apps, functions, logic apps, container apps, ACR)
+  - completeness-reconciliation + completeness-summary.json (the "capturing everything" proof)
 
 NONE of this is real. It is safe to commit and safe to share as an example.
 It does NOT connect to Azure and requires no permissions or modules.
@@ -105,6 +109,64 @@ $peer = @(
     [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    localVnet="vnet-app"; location="eastus"; peeringName="app-to-hub"; peeringState="Connected"; remoteVnetId="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"; allowForwardedTraffic="False"; allowGatewayTransit="False"; useRemoteGateways="True"; id="peer2" }
 )
 Export-Demo -Name "vnet-peerings" -Data $peer
+
+# ---- storage-accounts ----
+$storage = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="stprodassets";   location="eastus"; sku="Standard_LRS"; kind="StorageV2"; accessTier="Hot";  publicNetworkAccess="Disabled"; allowBlobPublicAccess="false"; supportsHttpsTrafficOnly="true"; minimumTlsVersion="TLS1_2"; isHnsEnabled="false"; primaryLocation="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Storage/storageAccounts/stprodassets" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="stprodbackups";  location="eastus"; sku="Standard_GRS"; kind="StorageV2"; accessTier="Cool"; publicNetworkAccess="Disabled"; allowBlobPublicAccess="false"; supportsHttpsTrafficOnly="true"; minimumTlsVersion="TLS1_2"; isHnsEnabled="false"; primaryLocation="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Storage/storageAccounts/stprodbackups" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="stdatalakeprod"; location="eastus"; sku="Standard_ZRS"; kind="StorageV2"; accessTier="Hot";  publicNetworkAccess="Enabled";  allowBlobPublicAccess="false"; supportsHttpsTrafficOnly="true"; minimumTlsVersion="TLS1_2"; isHnsEnabled="true";  primaryLocation="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Storage/storageAccounts/stdatalakeprod" }
+)
+Export-Demo -Name "storage-accounts" -Data $storage
+
+# ---- databases ----
+$databases = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="sql-prod/StorefrontDb"; type="microsoft.sql/servers/databases";        location="eastus"; sku="S3";           tier="Standard";      kind="v12.0,user"; publicNetworkAccess="Disabled"; version=""; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod/databases/StorefrontDb" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="cosmos-prod";           type="microsoft.documentdb/databaseaccounts";     location="eastus"; sku="";             tier="";              kind="GlobalDocumentDB"; publicNetworkAccess="Disabled"; version=""; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.DocumentDB/databaseAccounts/cosmos-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="pg-prod";               type="microsoft.dbforpostgresql/flexibleservers"; location="eastus"; sku="Standard_D4s_v3"; tier="GeneralPurpose"; kind="";           publicNetworkAccess="Disabled"; version="15"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/pg-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="redis-prod";            type="microsoft.cache/redis";                     location="eastus"; sku="Standard";     tier="";              kind="";           publicNetworkAccess="Disabled"; version=""; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Cache/Redis/redis-prod" }
+)
+Export-Demo -Name "databases" -Data $databases
+
+# ---- app-services-and-serverless ----
+$apps = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="app-storefront";  type="microsoft.web/sites";               location="eastus"; appKind="app,linux";      sku="P1v3"; tier="PremiumV3"; state="Running"; httpsOnly="true"; defaultHostName="app-storefront.azurewebsites.net"; appServicePlanId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/serverfarms/plan-prod"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/app-storefront" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="func-orders";     type="microsoft.web/sites";               location="eastus"; appKind="functionapp";    sku="Y1";   tier="Dynamic";   state="Running"; httpsOnly="true"; defaultHostName="func-orders.azurewebsites.net";    appServicePlanId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/serverfarms/plan-func"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/func-orders" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="plan-prod";       type="microsoft.web/serverfarms";         location="eastus"; appKind="linux";          sku="P1v3"; tier="PremiumV3"; state="";        httpsOnly="";     defaultHostName="";                                 appServicePlanId="";                                                                                                             tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/serverfarms/plan-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="logic-notify";    type="microsoft.logic/workflows";         location="eastus"; appKind="";               sku="";     tier="";          state="Enabled"; httpsOnly="";     defaultHostName="";                                 appServicePlanId="";                                                                                                             tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Logic/workflows/logic-notify" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="ca-api";          type="microsoft.app/containerapps";       location="eastus"; appKind="";               sku="";     tier="";          state="";        httpsOnly="";     defaultHostName="ca-api.happysky.eastus.azurecontainerapps.io"; appServicePlanId="";                                                                                     tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.App/containerApps/ca-api" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="acrprod";         type="microsoft.containerregistry/registries"; location="eastus"; appKind="";          sku="Premium"; tier="";       state="";        httpsOnly="";     defaultHostName="";                                 appServicePlanId="";                                                                                                             tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.ContainerRegistry/registries/acrprod" }
+)
+Export-Demo -Name "app-services-and-serverless" -Data $apps
+
+# ---- completeness-reconciliation (the "capturing everything" proof) ----
+# Shows dedicated-sheet types alongside catch-all-only types that are easy to miss.
+$recon = @(
+    [pscustomobject]@{ type="microsoft.network/privatednszones/virtualnetworklinks"; resourceCount=37; capturedInSheet="resources (catch-all only)"; hasDedicatedSheet=$false }
+    [pscustomobject]@{ type="microsoft.compute/virtualmachines/extensions";          resourceCount=8;  capturedInSheet="resources (catch-all only)"; hasDedicatedSheet=$false }
+    [pscustomobject]@{ type="microsoft.network/networkwatchers";                      resourceCount=3;  capturedInSheet="resources (catch-all only)"; hasDedicatedSheet=$false }
+    [pscustomobject]@{ type="microsoft.insights/actiongroups";                        resourceCount=2;  capturedInSheet="resources (catch-all only)"; hasDedicatedSheet=$false }
+    [pscustomobject]@{ type="microsoft.network/networksecuritygroups";                resourceCount=6;  capturedInSheet="networking";                  hasDedicatedSheet=$true }
+    [pscustomobject]@{ type="microsoft.network/virtualnetworks";                      resourceCount=4;  capturedInSheet="networking";                  hasDedicatedSheet=$true }
+    [pscustomobject]@{ type="microsoft.storage/storageaccounts";                      resourceCount=3;  capturedInSheet="storage-accounts";            hasDedicatedSheet=$true }
+    [pscustomobject]@{ type="microsoft.web/sites";                                    resourceCount=2;  capturedInSheet="app-services-and-serverless"; hasDedicatedSheet=$true }
+    [pscustomobject]@{ type="microsoft.sql/servers/databases";                        resourceCount=1;  capturedInSheet="databases";                   hasDedicatedSheet=$true }
+    [pscustomobject]@{ type="microsoft.compute/virtualmachines";                      resourceCount=5;  capturedInSheet="virtual-machines";            hasDedicatedSheet=$true }
+    [pscustomobject]@{ type="microsoft.keyvault/vaults";                              resourceCount=2;  capturedInSheet="key-vaults";                  hasDedicatedSheet=$true }
+)
+Export-Demo -Name "completeness-reconciliation" -Data $recon
+
+$totalDemo = ($recon | Measure-Object -Property resourceCount -Sum).Sum
+[pscustomobject]@{
+    totalResourceTypes      = $recon.Count
+    totalResources          = $totalDemo
+    resourcesCsvRowCount    = $totalDemo
+    countsReconcile         = $true
+    typesWithDedicatedSheet = @($recon | Where-Object hasDedicatedSheet).Count
+    typesCatchAllOnly       = @($recon | Where-Object { -not $_.hasDedicatedSheet }).Count
+    resourcesCatchAllOnly   = ($recon | Where-Object { -not $_.hasDedicatedSheet } | Measure-Object resourceCount -Sum).Sum
+    note                    = "FABRICATED DEMO. Every resource is in resources.csv. countsReconcile=true means resources.csv matches the Resource Graph total exactly."
+} | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputPath "completeness-summary.json") -Encoding UTF8
+Write-Host ("  {0,-30} {1,4} rows" -f "completeness-summary.json", 1)
 
 # ---- run summary marker ----
 [pscustomobject]@{

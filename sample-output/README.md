@@ -28,6 +28,23 @@ vm-web-01 / vm-web-02  --(8080)-->  vm-app-01  --(1433)-->  vm-sql-01
 | `managed-identities.csv` | System/user-assigned identities with principal IDs |
 | `virtual-machines.csv` | VM context to correlate connection endpoints back to names |
 | `vnet-peerings.csv` | Structural connectivity (hub ↔ spoke) |
+| `storage-accounts.csv` | Storage inventory (SKU, tier, public access, HTTPS/TLS, hierarchical namespace) |
+| `databases.csv` | SQL DB, Cosmos DB, PostgreSQL flexible server, Redis |
+| `app-services-and-serverless.csv` | Web apps, Functions, App Service Plans, Logic Apps, Container Apps, ACR |
+| `completeness-reconciliation.csv` | Every type + count + which sheet captures it; catch-all-only types flagged |
+| `completeness-summary.json` | Reconciles the total Resource Graph count vs `resources.csv` (`countsReconcile`) |
+
+## How to read `completeness-reconciliation.csv`
+
+This is the **"are we capturing everything?"** proof. Each row is a resource type with its
+count and the sheet that captures it. Rows where `hasDedicatedSheet` is **False** live
+**only** in the catch-all `resources.csv` — these are the easy-to-miss types (here:
+private DNS zone VNet links, VM extensions, network watchers, action groups). They're
+still fully captured; they just don't have their own focused sheet.
+
+`completeness-summary.json` reconciles the numbers: when `countsReconcile` is `true`, the
+row count in `resources.csv` matches the total resource count from Azure Resource Graph
+**exactly** — mathematical proof that nothing was dropped.
 
 ## How to read `app-insights-dependencies.csv`
 

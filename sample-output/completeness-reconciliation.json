@@ -1,0 +1,68 @@
+[
+  {
+    "type": "microsoft.network/privatednszones/virtualnetworklinks",
+    "resourceCount": 37,
+    "capturedInSheet": "resources (catch-all only)",
+    "hasDedicatedSheet": false
+  },
+  {
+    "type": "microsoft.compute/virtualmachines/extensions",
+    "resourceCount": 8,
+    "capturedInSheet": "resources (catch-all only)",
+    "hasDedicatedSheet": false
+  },
+  {
+    "type": "microsoft.network/networkwatchers",
+    "resourceCount": 3,
+    "capturedInSheet": "resources (catch-all only)",
+    "hasDedicatedSheet": false
+  },
+  {
+    "type": "microsoft.insights/actiongroups",
+    "resourceCount": 2,
+    "capturedInSheet": "resources (catch-all only)",
+    "hasDedicatedSheet": false
+  },
+  {
+    "type": "microsoft.network/networksecuritygroups",
+    "resourceCount": 6,
+    "capturedInSheet": "networking",
+    "hasDedicatedSheet": true
+  },
+  {
+    "type": "microsoft.network/virtualnetworks",
+    "resourceCount": 4,
+    "capturedInSheet": "networking",
+    "hasDedicatedSheet": true
+  },
+  {
+    "type": "microsoft.storage/storageaccounts",
+    "resourceCount": 3,
+    "capturedInSheet": "storage-accounts",
+    "hasDedicatedSheet": true
+  },
+  {
+    "type": "microsoft.web/sites",
+    "resourceCount": 2,
+    "capturedInSheet": "app-services-and-serverless",
+    "hasDedicatedSheet": true
+  },
+  {
+    "type": "microsoft.sql/servers/databases",
+    "resourceCount": 1,
+    "capturedInSheet": "databases",
+    "hasDedicatedSheet": true
+  },
+  {
+    "type": "microsoft.compute/virtualmachines",
+    "resourceCount": 5,
+    "capturedInSheet": "virtual-machines",
+    "hasDedicatedSheet": true
+  },
+  {
+    "type": "microsoft.keyvault/vaults",
+    "resourceCount": 2,
+    "capturedInSheet": "key-vaults",
+    "hasDedicatedSheet": true
+  }
+]

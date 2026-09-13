@@ -1,0 +1,10 @@
+{
+  "totalResourceTypes": 11,
+  "totalResources": 73.0,
+  "resourcesCsvRowCount": 73.0,
+  "countsReconcile": true,
+  "typesWithDedicatedSheet": 7,
+  "typesCatchAllOnly": 4,
+  "resourcesCatchAllOnly": 50.0,
+  "note": "FABRICATED DEMO. Every resource is in resources.csv. countsReconcile=true means resources.csv matches the Resource Graph total exactly."
+}
