@@ -1,0 +1,54 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "sql-prod/Default",
+    "type": "microsoft.sql/servers/auditingsettings",
+    "source": "SQL audit/VA config",
+    "state": "Enabled",
+    "referencedStorageHost": "stprodbackups",
+    "storageEndpoint": "https://stprodbackups.blob.core.windows.net/",
+    "storageContainerPath": "",
+    "referencedStorageAccountId": "",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod/auditingSettings/Default"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "sql-prod/StorefrontDb",
+    "type": "microsoft.sql/servers/databases/vulnerabilityassessments",
+    "source": "SQL audit/VA config",
+    "state": "Enabled",
+    "referencedStorageHost": "stprodbackups",
+    "storageEndpoint": "https://stprodbackups.blob.core.windows.net/",
+    "storageContainerPath": "https://stprodbackups.blob.core.windows.net/vascans",
+    "referencedStorageAccountId": "",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod/databases/StorefrontDb/vulnerabilityAssessments/Default"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "vm-web-01",
+    "type": "microsoft.compute/virtualmachines",
+    "source": "referenced in resource properties",
+    "state": "",
+    "referencedStorageHost": "stprodassets",
+    "storageEndpoint": "",
+    "storageContainerPath": "",
+    "referencedStorageAccountId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Storage/storageAccounts/stprodassets",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-web-01"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "func-orders",
+    "type": "microsoft.web/sites",
+    "source": "referenced in resource properties",
+    "state": "",
+    "referencedStorageHost": "stprodassets",
+    "storageEndpoint": "",
+    "storageContainerPath": "",
+    "referencedStorageAccountId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Storage/storageAccounts/stprodassets",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/func-orders"
+  }
+]

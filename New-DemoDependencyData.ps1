@@ -15,6 +15,7 @@ you can preview exactly what the customer will see for:
   - virtual-machines          (context to correlate connection endpoints)
   - vnet-peerings             (structural connectivity context)
   - storage-accounts          (storage inventory with config)
+  - storage-links             (configured storage relationships, incl. DB -> storage)
   - databases                 (SQL / Cosmos / PostgreSQL / Redis)
   - app-services-and-serverless (web apps, functions, logic apps, container apps, ACR)
   - key-vault-access          (who can access each vault)
@@ -136,6 +137,17 @@ $storage = @(
     [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="stdatalakeprod"; location="eastus"; sku="Standard_ZRS"; kind="StorageV2"; accessTier="Hot";  publicNetworkAccess="Enabled";  allowBlobPublicAccess="false"; supportsHttpsTrafficOnly="true"; minimumTlsVersion="TLS1_2"; isHnsEnabled="true";  primaryLocation="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Storage/storageAccounts/stdatalakeprod" }
 )
 Export-Demo -Name "storage-accounts" -Data $storage
+
+# ---- storage-links (configured relationships, incl. DB -> storage) ----
+# Same column shape as the real script. Row 1 is the DB -> storage example:
+# a SQL server's auditing configured to write to a storage account.
+$storageLinks = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="sql-prod/Default"; type="microsoft.sql/servers/auditingsettings"; source="SQL audit/VA config"; state="Enabled"; referencedStorageHost="stprodbackups"; storageEndpoint="https://stprodbackups.blob.core.windows.net/"; storageContainerPath=""; referencedStorageAccountId=""; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod/auditingSettings/Default" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="sql-prod/StorefrontDb"; type="microsoft.sql/servers/databases/vulnerabilityassessments"; source="SQL audit/VA config"; state="Enabled"; referencedStorageHost="stprodbackups"; storageEndpoint="https://stprodbackups.blob.core.windows.net/"; storageContainerPath="https://stprodbackups.blob.core.windows.net/vascans"; referencedStorageAccountId=""; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod/databases/StorefrontDb/vulnerabilityAssessments/Default" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="vm-web-01"; type="microsoft.compute/virtualmachines"; source="referenced in resource properties"; state=""; referencedStorageHost="stprodassets"; storageEndpoint=""; storageContainerPath=""; referencedStorageAccountId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Storage/storageAccounts/stprodassets"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-web-01" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="func-orders"; type="microsoft.web/sites"; source="referenced in resource properties"; state=""; referencedStorageHost="stprodassets"; storageEndpoint=""; storageContainerPath=""; referencedStorageAccountId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Storage/storageAccounts/stprodassets"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/func-orders" }
+)
+Export-Demo -Name "storage-links" -Data $storageLinks
 
 # ---- databases ----
 $databases = @(

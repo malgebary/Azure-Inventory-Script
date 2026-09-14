@@ -29,6 +29,7 @@ vm-web-01 / vm-web-02  --(8080)-->  vm-app-01  --(1433)-->  vm-sql-01
 | `virtual-machines.csv` | VM context to correlate connection endpoints back to names |
 | `vnet-peerings.csv` | Structural connectivity (hub ↔ spoke) |
 | `storage-accounts.csv` | Storage inventory (SKU, tier, public access, HTTPS/TLS, hierarchical namespace) |
+| `storage-links.csv` | Configured storage relationships, **including DB → storage** (SQL auditing/VA targets) |
 | `databases.csv` | SQL DB, Cosmos DB, PostgreSQL flexible server, Redis |
 | `app-services-and-serverless.csv` | Web apps, Functions, App Service Plans, Logic Apps, Container Apps, ACR |
 | `completeness-reconciliation.csv` | Every type + count + which sheet captures it; catch-all-only types flagged |
@@ -64,11 +65,17 @@ migration wave.
 
 ## A note on DB → storage
 
-Database-to-storage relationships show up in `storage-links.csv` when they are
-**configured** — e.g. SQL auditing, vulnerability assessment, or backup targets pointed at
-a storage account. **Live PaaS database-to-storage traffic is not captured** (Azure SQL /
-Managed Instance internals aren't observable). See the "Storage relationships" and
-"Coverage & limitations" sections in the top-level README for the full breakdown.
+Database-to-storage relationships show up in **`storage-links.csv`** when they are
+**configured**. In the sample, the first two rows are exactly this:
+
+- `sql-prod/Default` (`microsoft.sql/servers/auditingsettings`) → **SQL auditing** writing
+  to the `stprodbackups` storage account.
+- `sql-prod/StorefrontDb` (`...databases/vulnerabilityassessments`) → **VA scans** writing
+  to `stprodbackups`.
+
+**Live PaaS database-to-storage traffic is not captured** (Azure SQL / Managed Instance
+internals aren't observable). See the "Storage relationships" and "Coverage & limitations"
+sections in the top-level README for the full breakdown.
 
 ## Regenerate
 
