@@ -1,0 +1,65 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-network-hub",
+    "name": "vnet-hub",
+    "type": "microsoft.network/virtualnetworks",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "vnet-app",
+    "type": "microsoft.network/virtualnetworks",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-network-hub",
+    "name": "fw-hub",
+    "type": "microsoft.network/azurefirewalls",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub/providers/Microsoft.Network/azureFirewalls/fw-hub"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-network-hub",
+    "name": "ergw-hub",
+    "type": "microsoft.network/virtualnetworkgateways",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworkGateways/ergw-hub"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "agw-web",
+    "type": "microsoft.network/applicationgateways",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/applicationGateways/agw-web"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "nsg-web",
+    "type": "microsoft.network/networksecuritygroups",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/networkSecurityGroups/nsg-web"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "pe-sql",
+    "type": "microsoft.network/privateendpoints",
+    "location": "eastus",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/privateEndpoints/pe-sql"
+  }
+]

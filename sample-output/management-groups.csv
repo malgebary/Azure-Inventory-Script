@@ -1,0 +1,4 @@
+"Name","DisplayName","Id","TenantId"
+"contoso-root","Contoso (Tenant Root)","/providers/Microsoft.Management/managementGroups/contoso-root","22222222-2222-2222-2222-222222222222"
+"contoso-platform","Platform","/providers/Microsoft.Management/managementGroups/contoso-platform","22222222-2222-2222-2222-222222222222"
+"contoso-landingzones","Landing Zones","/providers/Microsoft.Management/managementGroups/contoso-landingzones","22222222-2222-2222-2222-222222222222"

@@ -1,0 +1,7 @@
+"subscriptionId","type","resourceCount"
+"11111111-1111-1111-1111-111111111111","microsoft.network/privatednszones/virtualnetworklinks","37"
+"11111111-1111-1111-1111-111111111111","microsoft.network/networksecuritygroups","6"
+"11111111-1111-1111-1111-111111111111","microsoft.compute/virtualmachines","5"
+"11111111-1111-1111-1111-111111111111","microsoft.storage/storageaccounts","3"
+"11111111-1111-1111-1111-111111111111","microsoft.web/sites","2"
+"11111111-1111-1111-1111-111111111111","microsoft.keyvault/vaults","2"

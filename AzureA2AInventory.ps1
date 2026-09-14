@@ -241,11 +241,17 @@ Resources
 | where type in~ (
     'microsoft.network/virtualnetworks','microsoft.network/networkinterfaces',
     'microsoft.network/networksecuritygroups','microsoft.network/routetables',
-    'microsoft.network/azurefirewalls','microsoft.network/applicationgateways',
-    'microsoft.network/loadbalancers','microsoft.network/publicipaddresses',
+    'microsoft.network/azurefirewalls','microsoft.network/firewallpolicies',
+    'microsoft.network/applicationgateways','microsoft.network/frontdoors',
+    'microsoft.cdn/profiles','microsoft.network/loadbalancers',
+    'microsoft.network/publicipaddresses','microsoft.network/natgateways',
     'microsoft.network/privateendpoints','microsoft.network/privatednszones',
-    'microsoft.network/virtualnetworkgateways','microsoft.network/expressroutecircuits',
-    'microsoft.network/connections')
+    'microsoft.network/dnsresolvers','microsoft.network/bastionhosts',
+    'microsoft.network/ddosprotectionplans','microsoft.network/virtualnetworkgateways',
+    'microsoft.network/expressroutecircuits','microsoft.network/connections',
+    'microsoft.network/virtualwans','microsoft.network/virtualhubs',
+    'microsoft.network/virtualhubs/routeservers','microsoft.network/vpngateways',
+    'microsoft.network/expressroutegateways','microsoft.network/p2svpngateways')
 | project subscriptionId, resourceGroup, name, type, location, tags = tostring(tags), id
 | order by subscriptionId, resourceGroup, type, name
 "@
@@ -254,10 +260,21 @@ Resources
 Resources
 | where type =~ 'microsoft.network/virtualnetworks'
 | mv-expand subnet = properties.subnets to typeof(dynamic)
+| extend seList = subnet.properties.serviceEndpoints
+| extend serviceEndpoints = iff(isnull(seList), '', tostring(strcat_array(extract_all(@'"service":"([^"]+)"', tostring(seList)), ', ')))
+| extend delegatedService = tostring(subnet.properties.delegations[0].properties.serviceName)
 | project subscriptionId, resourceGroup, vnetName = name, location,
           addressPrefixes = tostring(properties.addressSpace.addressPrefixes),
           subnetName = tostring(subnet.name),
           subnetPrefix = tostring(subnet.properties.addressPrefix),
+          subnetPrefixes = tostring(subnet.properties.addressPrefixes),
+          serviceEndpoints,
+          delegatedService,
+          isDelegated = isnotempty(delegatedService),
+          privateEndpointNetworkPolicies = tostring(subnet.properties.privateEndpointNetworkPolicies),
+          privateLinkServiceNetworkPolicies = tostring(subnet.properties.privateLinkServiceNetworkPolicies),
+          defaultOutboundAccess = tostring(subnet.properties.defaultOutboundAccess),
+          natGatewayId = tostring(subnet.properties.natGateway.id),
           routeTableId = tostring(subnet.properties.routeTable.id),
           nsgId = tostring(subnet.properties.networkSecurityGroup.id), id
 | order by subscriptionId, resourceGroup, vnetName, subnetName
@@ -289,9 +306,15 @@ Resources
           protocol = tostring(rule.properties.protocol),
           priority = tostring(rule.properties.priority),
           sourceAddressPrefix = tostring(rule.properties.sourceAddressPrefix),
+          sourceAddressPrefixes = tostring(rule.properties.sourceAddressPrefixes),
+          sourceApplicationSecurityGroups = tostring(rule.properties.sourceApplicationSecurityGroups),
           sourcePortRange = tostring(rule.properties.sourcePortRange),
+          sourcePortRanges = tostring(rule.properties.sourcePortRanges),
           destinationAddressPrefix = tostring(rule.properties.destinationAddressPrefix),
+          destinationAddressPrefixes = tostring(rule.properties.destinationAddressPrefixes),
+          destinationApplicationSecurityGroups = tostring(rule.properties.destinationApplicationSecurityGroups),
           destinationPortRange = tostring(rule.properties.destinationPortRange),
+          destinationPortRanges = tostring(rule.properties.destinationPortRanges),
           id
 | order by subscriptionId, resourceGroup, nsgName, priority
 "@
@@ -304,6 +327,75 @@ Resources
           privateLinkServiceConnections = tostring(properties.privateLinkServiceConnections),
           id
 | order by subscriptionId, resourceGroup, name
+"@
+
+  "vnet-connections" = @"
+Resources
+| where type in~ ('microsoft.network/networkinterfaces','microsoft.network/privateendpoints')
+| extend ipcfg = properties.ipConfigurations
+| mv-expand ipcfg = iff(type =~ 'microsoft.network/privateendpoints', dynamic([{}]), ipcfg)
+| extend subnetId = iff(type =~ 'microsoft.network/privateendpoints', tostring(properties.subnet.id), tostring(ipcfg.properties.subnet.id))
+| where isnotempty(subnetId)
+| extend connectionType = iff(type =~ 'microsoft.network/privateendpoints', 'PrivateEndpoint', 'NIC')
+| extend attachedResource = tostring(name), attachedType = tostring(type), serviceName = ''
+| union (
+    Resources
+    | where type =~ 'microsoft.network/virtualnetworks'
+    | mv-expand subnet = properties.subnets
+    | extend deleg = subnet.properties.delegations
+    | where array_length(deleg) > 0
+    | mv-expand deleg
+    | extend subnetId = tostring(subnet.id)
+    | extend connectionType = 'Delegation', attachedResource = '', attachedType = '',
+             serviceName = tostring(deleg.properties.serviceName)
+    | extend subscriptionId = subscriptionId, resourceGroup = resourceGroup
+)
+| extend vnetName = tostring(split(subnetId,'/')[8]), subnetName = tostring(split(subnetId,'/')[10])
+| project subscriptionId, resourceGroup, vnetName, subnetName, connectionType,
+          attachedResource, attachedType, serviceName, subnetId
+| order by subscriptionId, vnetName, subnetName, connectionType, attachedResource
+"@
+
+  "network-edge" = @"
+Resources
+| where type in~ (
+    'microsoft.network/virtualnetworkgateways','microsoft.network/expressroutecircuits',
+    'microsoft.network/azurefirewalls','microsoft.network/firewallpolicies',
+    'microsoft.network/applicationgateways','microsoft.network/frontdoors',
+    'microsoft.cdn/profiles','microsoft.network/bastionhosts',
+    'microsoft.network/natgateways','microsoft.network/virtualwans',
+    'microsoft.network/virtualhubs','microsoft.network/vpngateways',
+    'microsoft.network/expressroutegateways','microsoft.network/ddosprotectionplans')
+| extend category = case(
+    type =~ 'microsoft.network/virtualnetworkgateways', strcat('VNetGateway:', tostring(properties.gatewayType)),
+    type =~ 'microsoft.network/expressroutecircuits', 'ExpressRouteCircuit',
+    type =~ 'microsoft.network/azurefirewalls', 'AzureFirewall',
+    type =~ 'microsoft.network/firewallpolicies', 'FirewallPolicy',
+    type =~ 'microsoft.network/applicationgateways', 'ApplicationGateway',
+    type =~ 'microsoft.network/frontdoors', 'FrontDoor(classic)',
+    type =~ 'microsoft.cdn/profiles', strcat('FrontDoor/CDN:', tostring(sku.name)),
+    type =~ 'microsoft.network/bastionhosts', 'Bastion',
+    type =~ 'microsoft.network/natgateways', 'NatGateway',
+    type =~ 'microsoft.network/virtualwans', 'VirtualWAN',
+    type =~ 'microsoft.network/virtualhubs', 'VirtualHub',
+    type =~ 'microsoft.network/vpngateways', 'vWAN-VpnGateway',
+    type =~ 'microsoft.network/expressroutegateways', 'vWAN-ExpressRouteGateway',
+    type =~ 'microsoft.network/ddosprotectionplans', 'DdosProtectionPlan',
+    'Other')
+| extend gatewayType = tostring(properties.gatewayType)
+| extend vpnType = tostring(properties.vpnType)
+| extend skuName = coalesce(tostring(properties.sku.name), tostring(sku.name), tostring(properties.sku.tier))
+| extend activeActive = tostring(properties.activeActive)
+| extend circuitBandwidthMbps = tostring(properties.serviceProviderProperties.bandwidthInMbps)
+| extend circuitProvider = tostring(properties.serviceProviderProperties.serviceProviderName)
+| extend circuitPeeringLocation = tostring(properties.serviceProviderProperties.peeringLocation)
+| extend appGwTier = tostring(properties.sku.tier)
+| extend wafEnabled = tostring(properties.webApplicationFirewallConfiguration.enabled)
+| project subscriptionId, resourceGroup, name, type, location, category,
+          gatewayType, vpnType, skuName, activeActive,
+          circuitProvider, circuitPeeringLocation, circuitBandwidthMbps,
+          appGwTier, wafEnabled, id
+| order by subscriptionId, category, name
 "@
 
   "key-vaults" = @"

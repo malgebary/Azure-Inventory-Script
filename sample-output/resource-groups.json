@@ -1,0 +1,37 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "name": "rg-app-prod",
+    "location": "eastus",
+    "tags": "{\"env\":\"prod\"}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "name": "rg-data-prod",
+    "location": "eastus",
+    "tags": "{\"env\":\"prod\"}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "name": "rg-network-hub",
+    "location": "eastus",
+    "tags": "{\"env\":\"prod\"}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "name": "rg-security",
+    "location": "eastus",
+    "tags": "{\"env\":\"prod\"}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "name": "rg-infra",
+    "location": "eastus",
+    "tags": "{\"env\":\"prod\"}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra"
+  }
+]

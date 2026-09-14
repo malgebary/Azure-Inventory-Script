@@ -1,0 +1,2 @@
+"subscriptionId","resourceGroup","name","location","customerId","sku","id"
+"11111111-1111-1111-1111-111111111111","rg-infra","law-monitoring-prod","eastus","33333333-3333-3333-3333-333333333333","PerGB2018","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod"

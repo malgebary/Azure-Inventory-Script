@@ -1,0 +1,20 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "pe-sql",
+    "location": "eastus",
+    "subnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe",
+    "privateLinkServiceConnections": "[{\"name\":\"pe-sql\",\"properties\":{\"privateLinkServiceId\":\".../servers/sql-prod\",\"groupIds\":[\"sqlServer\"]}}]",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/privateEndpoints/pe-sql"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-security",
+    "name": "pe-kv",
+    "location": "eastus",
+    "subnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe",
+    "privateLinkServiceConnections": "[{\"name\":\"pe-kv\",\"properties\":{\"privateLinkServiceId\":\".../vaults/kv-prod\",\"groupIds\":[\"vault\"]}}]",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.Network/privateEndpoints/pe-kv"
+  }
+]

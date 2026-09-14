@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "contoso-root",
+    "DisplayName": "Contoso (Tenant Root)",
+    "Id": "/providers/Microsoft.Management/managementGroups/contoso-root",
+    "TenantId": "22222222-2222-2222-2222-222222222222"
+  },
+  {
+    "Name": "contoso-platform",
+    "DisplayName": "Platform",
+    "Id": "/providers/Microsoft.Management/managementGroups/contoso-platform",
+    "TenantId": "22222222-2222-2222-2222-222222222222"
+  },
+  {
+    "Name": "contoso-landingzones",
+    "DisplayName": "Landing Zones",
+    "Id": "/providers/Microsoft.Management/managementGroups/contoso-landingzones",
+    "TenantId": "22222222-2222-2222-2222-222222222222"
+  }
+]

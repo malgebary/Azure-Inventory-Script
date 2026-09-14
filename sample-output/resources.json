@@ -1,0 +1,79 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "vm-web-01",
+    "type": "microsoft.compute/virtualmachines",
+    "location": "eastus",
+    "kind": "",
+    "sku": "Standard_D4s_v5",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-web-01"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "app-storefront",
+    "type": "microsoft.web/sites",
+    "location": "eastus",
+    "kind": "app,linux",
+    "sku": "",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/app-storefront"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "stprodbackups",
+    "type": "microsoft.storage/storageaccounts",
+    "location": "eastus",
+    "kind": "StorageV2",
+    "sku": "Standard_GRS",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Storage/storageAccounts/stprodbackups"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "pg-prod",
+    "type": "microsoft.dbforpostgresql/flexibleservers",
+    "location": "eastus",
+    "kind": "",
+    "sku": "Standard_D4s_v3",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/pg-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-network-hub",
+    "name": "vnet-hub",
+    "type": "microsoft.network/virtualnetworks",
+    "location": "eastus",
+    "kind": "",
+    "sku": "",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-network-hub",
+    "name": "fw-hub",
+    "type": "microsoft.network/azurefirewalls",
+    "location": "eastus",
+    "kind": "",
+    "sku": "",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub/providers/Microsoft.Network/azureFirewalls/fw-hub"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-security",
+    "name": "kv-prod",
+    "type": "microsoft.keyvault/vaults",
+    "location": "eastus",
+    "kind": "",
+    "sku": "standard",
+    "tags": "{}",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod"
+  }
+]

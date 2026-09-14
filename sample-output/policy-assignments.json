@@ -1,0 +1,29 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "Name": "require-tag-env",
+    "DisplayName": "Require env tag on resources",
+    "PolicyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/require-tag",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111",
+    "EnforcementMode": "Default"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "Name": "deny-public-ip",
+    "DisplayName": "Deny public IP on NICs",
+    "PolicyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/deny-public-ip",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111",
+    "EnforcementMode": "Default"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "subscriptionName": "Prod-Landing-Zone",
+    "Name": "allowed-locations",
+    "DisplayName": "Allowed locations",
+    "PolicyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/allowed-locations",
+    "Scope": "/subscriptions/11111111-1111-1111-1111-111111111111",
+    "EnforcementMode": "Default"
+  }
+]

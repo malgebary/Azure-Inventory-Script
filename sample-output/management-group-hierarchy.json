@@ -1,0 +1,26 @@
+[
+  {
+    "parentName": "contoso-root",
+    "parentDisplayName": "Contoso (Tenant Root)",
+    "childType": "Microsoft.Management/managementGroups",
+    "childName": "contoso-platform",
+    "childDisplayName": "Platform",
+    "childId": "/providers/Microsoft.Management/managementGroups/contoso-platform"
+  },
+  {
+    "parentName": "contoso-root",
+    "parentDisplayName": "Contoso (Tenant Root)",
+    "childType": "Microsoft.Management/managementGroups",
+    "childName": "contoso-landingzones",
+    "childDisplayName": "Landing Zones",
+    "childId": "/providers/Microsoft.Management/managementGroups/contoso-landingzones"
+  },
+  {
+    "parentName": "contoso-landingzones",
+    "parentDisplayName": "Landing Zones",
+    "childType": "/subscriptions",
+    "childName": "11111111-1111-1111-1111-111111111111",
+    "childDisplayName": "Prod-Landing-Zone",
+    "childId": "/subscriptions/11111111-1111-1111-1111-111111111111"
+  }
+]

@@ -1,0 +1,6 @@
+"subscriptionId","name","location","tags","id"
+"11111111-1111-1111-1111-111111111111","rg-app-prod","eastus","{""env"":""prod""}","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod"
+"11111111-1111-1111-1111-111111111111","rg-data-prod","eastus","{""env"":""prod""}","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod"
+"11111111-1111-1111-1111-111111111111","rg-network-hub","eastus","{""env"":""prod""}","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-network-hub"
+"11111111-1111-1111-1111-111111111111","rg-security","eastus","{""env"":""prod""}","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security"
+"11111111-1111-1111-1111-111111111111","rg-infra","eastus","{""env"":""prod""}","/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra"

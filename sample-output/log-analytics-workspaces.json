@@ -1,0 +1,9 @@
+{
+  "subscriptionId": "11111111-1111-1111-1111-111111111111",
+  "resourceGroup": "rg-infra",
+  "name": "law-monitoring-prod",
+  "location": "eastus",
+  "customerId": "33333333-3333-3333-3333-333333333333",
+  "sku": "PerGB2018",
+  "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod"
+}

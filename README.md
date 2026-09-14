@@ -47,10 +47,12 @@ one **CSV + JSON** file per dataset.
 | `databases` | SQL DB / elastic pools / Managed Instance, Cosmos DB, PostgreSQL, MySQL, MariaDB, Redis, SQL-on-VM |
 | `app-services-and-serverless` | App Service, App Service Plans, Functions, Static Web Apps, Logic Apps, Container Apps + environments, API Management, ACR, Container Instances |
 | `virtual-machines`, `disks` | VM size/OS/power state/license; disk SKU/size |
-| `networking` | VNets, NICs, NSGs, route tables, firewalls, gateways, ER circuits, public IPs |
-| `vnets-subnets` | VNet address spaces and subnets |
+| `networking` | All network resources — VNets, NICs, NSGs, route tables, **Azure Firewall + policy, App Gateway, Front Door/CDN, Load Balancers, NAT Gateway, Bastion, VNet gateways (VPN/ER), ExpressRoute circuits, Virtual WAN/hubs, Route Server, DDoS, DNS Resolver**, public IPs |
+| `network-edge` | **Edge/connectivity detail** — for each gateway/firewall/ER/App Gateway/Front Door: type (VPN vs ExpressRoute), SKU, active-active, circuit bandwidth/provider/peering, WAF enabled |
+| `vnets-subnets` | VNet address spaces (**IP ranges**) + per-subnet features: prefix, **service endpoints, delegation (VNet injection), private-endpoint/PLS network policies, default outbound access, NAT gateway, route table, NSG** |
 | `vnet-peerings` | **Structural connectivity** — which VNet connects to which |
-| `nsg-rules` | Every NSG rule (allowed/denied paths) |
+| `vnet-connections` | **What's attached to each VNet/subnet** — NICs, private endpoints, and delegated (injected) services |
+| `nsg-rules` | Every NSG rule (allowed/denied paths), incl. multi-prefix, port ranges, and ASG source/destination |
 | `private-endpoints` | Private endpoints and what they connect to |
 | `key-vaults` | Vaults, RBAC mode, public network access |
 | `key-vault-access` | Per-vault **access policies** — object IDs + key/secret/certificate permissions (who can access each vault) |

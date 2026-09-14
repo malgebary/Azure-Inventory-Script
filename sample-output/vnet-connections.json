@@ -1,0 +1,46 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "vnetName": "vnet-app",
+    "subnetName": "snet-web",
+    "connectionType": "NIC",
+    "attachedResource": "vm-web-01-nic",
+    "attachedType": "microsoft.network/networkinterfaces",
+    "serviceName": "",
+    "subnetId": ".../vnet-app/subnets/snet-web"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "vnetName": "vnet-app",
+    "subnetName": "snet-pe",
+    "connectionType": "PrivateEndpoint",
+    "attachedResource": "pe-sql",
+    "attachedType": "microsoft.network/privateendpoints",
+    "serviceName": "",
+    "subnetId": ".../vnet-app/subnets/snet-pe"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "vnetName": "vnet-app",
+    "subnetName": "snet-pe",
+    "connectionType": "PrivateEndpoint",
+    "attachedResource": "pe-kv",
+    "attachedType": "microsoft.network/privateendpoints",
+    "serviceName": "",
+    "subnetId": ".../vnet-app/subnets/snet-pe"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "vnetName": "vnet-app",
+    "subnetName": "snet-cae",
+    "connectionType": "Delegation",
+    "attachedResource": "",
+    "attachedType": "",
+    "serviceName": "Microsoft.App/environments",
+    "subnetId": ".../vnet-app/subnets/snet-cae"
+  }
+]

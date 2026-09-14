@@ -1,0 +1,5 @@
+"subscriptionId","resourceGroup","vnetName","subnetName","connectionType","attachedResource","attachedType","serviceName","subnetId"
+"11111111-1111-1111-1111-111111111111","rg-app-prod","vnet-app","snet-web","NIC","vm-web-01-nic","microsoft.network/networkinterfaces","",".../vnet-app/subnets/snet-web"
+"11111111-1111-1111-1111-111111111111","rg-app-prod","vnet-app","snet-pe","PrivateEndpoint","pe-sql","microsoft.network/privateendpoints","",".../vnet-app/subnets/snet-pe"
+"11111111-1111-1111-1111-111111111111","rg-app-prod","vnet-app","snet-pe","PrivateEndpoint","pe-kv","microsoft.network/privateendpoints","",".../vnet-app/subnets/snet-pe"
+"11111111-1111-1111-1111-111111111111","rg-app-prod","vnet-app","snet-cae","Delegation","","","Microsoft.App/environments",".../vnet-app/subnets/snet-cae"

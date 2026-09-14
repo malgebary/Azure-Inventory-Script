@@ -1,0 +1,4 @@
+"parentName","parentDisplayName","childType","childName","childDisplayName","childId"
+"contoso-root","Contoso (Tenant Root)","Microsoft.Management/managementGroups","contoso-platform","Platform","/providers/Microsoft.Management/managementGroups/contoso-platform"
+"contoso-root","Contoso (Tenant Root)","Microsoft.Management/managementGroups","contoso-landingzones","Landing Zones","/providers/Microsoft.Management/managementGroups/contoso-landingzones"
+"contoso-landingzones","Landing Zones","/subscriptions","11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","/subscriptions/11111111-1111-1111-1111-111111111111"

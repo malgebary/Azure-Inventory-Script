@@ -1,0 +1,32 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "type": "microsoft.network/privatednszones/virtualnetworklinks",
+    "resourceCount": 37
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "type": "microsoft.network/networksecuritygroups",
+    "resourceCount": 6
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "type": "microsoft.compute/virtualmachines",
+    "resourceCount": 5
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "type": "microsoft.storage/storageaccounts",
+    "resourceCount": 3
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "type": "microsoft.web/sites",
+    "resourceCount": 2
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "type": "microsoft.keyvault/vaults",
+    "resourceCount": 2
+  }
+]

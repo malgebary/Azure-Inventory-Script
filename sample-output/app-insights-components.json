@@ -1,0 +1,22 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "ai-storefront-prod",
+    "location": "eastus",
+    "appId": "44444444-4444-4444-4444-444444444444",
+    "applicationType": "web",
+    "workspaceResourceId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Insights/components/ai-storefront-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "ai-identity-prod",
+    "location": "eastus",
+    "appId": "55555555-5555-5555-5555-555555555555",
+    "applicationType": "web",
+    "workspaceResourceId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Insights/components/ai-identity-prod"
+  }
+]

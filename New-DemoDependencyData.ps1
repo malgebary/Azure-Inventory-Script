@@ -130,6 +130,143 @@ $kvRefs = @(
 )
 Export-Demo -Name "key-vault-references" -Data $kvRefs
 
+# ============================================================================
+#  Governance, inventory, and networking sheets (mirror the real script)
+# ============================================================================
+
+# ---- management-groups + hierarchy ----
+Export-Demo -Name "management-groups" -Data @(
+    [pscustomobject]@{ Name="contoso-root"; DisplayName="Contoso (Tenant Root)"; Id="/providers/Microsoft.Management/managementGroups/contoso-root"; TenantId="22222222-2222-2222-2222-222222222222" }
+    [pscustomobject]@{ Name="contoso-platform"; DisplayName="Platform"; Id="/providers/Microsoft.Management/managementGroups/contoso-platform"; TenantId="22222222-2222-2222-2222-222222222222" }
+    [pscustomobject]@{ Name="contoso-landingzones"; DisplayName="Landing Zones"; Id="/providers/Microsoft.Management/managementGroups/contoso-landingzones"; TenantId="22222222-2222-2222-2222-222222222222" }
+)
+Export-Demo -Name "management-group-hierarchy" -Data @(
+    [pscustomobject]@{ parentName="contoso-root"; parentDisplayName="Contoso (Tenant Root)"; childType="Microsoft.Management/managementGroups"; childName="contoso-platform"; childDisplayName="Platform"; childId="/providers/Microsoft.Management/managementGroups/contoso-platform" }
+    [pscustomobject]@{ parentName="contoso-root"; parentDisplayName="Contoso (Tenant Root)"; childType="Microsoft.Management/managementGroups"; childName="contoso-landingzones"; childDisplayName="Landing Zones"; childId="/providers/Microsoft.Management/managementGroups/contoso-landingzones" }
+    [pscustomobject]@{ parentName="contoso-landingzones"; parentDisplayName="Landing Zones"; childType="/subscriptions"; childName=$subId; childDisplayName="Prod-Landing-Zone"; childId="/subscriptions/$subId" }
+)
+
+# ---- subscriptions ----
+Export-Demo -Name "subscriptions" -Data @(
+    [pscustomobject]@{ Id=$subId; Name="Prod-Landing-Zone"; State="Enabled"; TenantId="22222222-2222-2222-2222-222222222222" }
+)
+
+# ---- resource-groups ----
+Export-Demo -Name "resource-groups" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; name="rg-app-prod";     location="eastus"; tags="{""env"":""prod""}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; name="rg-data-prod";    location="eastus"; tags="{""env"":""prod""}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; name="rg-network-hub";  location="eastus"; tags="{""env"":""prod""}"; id="/subscriptions/$subId/resourceGroups/rg-network-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; name="rg-security";     location="eastus"; tags="{""env"":""prod""}"; id="/subscriptions/$subId/resourceGroups/rg-security" }
+    [pscustomobject]@{ subscriptionId=$subId; name="rg-infra";        location="eastus"; tags="{""env"":""prod""}"; id="/subscriptions/$subId/resourceGroups/rg-infra" }
+)
+
+# ---- resources (the complete, unfiltered inventory - a representative slice) ----
+$resources = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="vm-web-01";      type="microsoft.compute/virtualmachines";       location="eastus"; kind=""; sku="Standard_D4s_v5"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Compute/virtualMachines/vm-web-01" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="app-storefront"; type="microsoft.web/sites";                     location="eastus"; kind="app,linux"; sku=""; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/app-storefront" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="stprodbackups";  type="microsoft.storage/storageaccounts";       location="eastus"; kind="StorageV2"; sku="Standard_GRS"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Storage/storageAccounts/stprodbackups" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="pg-prod";        type="microsoft.dbforpostgresql/flexibleservers"; location="eastus"; kind=""; sku="Standard_D4s_v3"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/pg-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="vnet-hub";     type="microsoft.network/virtualnetworks";       location="eastus"; kind=""; sku=""; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="fw-hub";       type="microsoft.network/azurefirewalls";        location="eastus"; kind=""; sku=""; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/azureFirewalls/fw-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; name="kv-prod";         type="microsoft.keyvault/vaults";               location="eastus"; kind=""; sku="standard"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod" }
+)
+Export-Demo -Name "resources" -Data $resources
+
+# ---- resource-summary-by-type ----
+Export-Demo -Name "resource-summary-by-type" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; type="microsoft.network/privatednszones/virtualnetworklinks"; resourceCount=37 }
+    [pscustomobject]@{ subscriptionId=$subId; type="microsoft.network/networksecuritygroups"; resourceCount=6 }
+    [pscustomobject]@{ subscriptionId=$subId; type="microsoft.compute/virtualmachines"; resourceCount=5 }
+    [pscustomobject]@{ subscriptionId=$subId; type="microsoft.storage/storageaccounts"; resourceCount=3 }
+    [pscustomobject]@{ subscriptionId=$subId; type="microsoft.web/sites"; resourceCount=2 }
+    [pscustomobject]@{ subscriptionId=$subId; type="microsoft.keyvault/vaults"; resourceCount=2 }
+)
+
+# ---- disks ----
+Export-Demo -Name "disks" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="vm-web-01_osdisk"; location="eastus"; sku="Premium_LRS";  diskSizeGB="128"; diskState="Attached"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Compute/disks/vm-web-01_osdisk" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="vm-sql-01_datadisk"; location="eastus"; sku="Premium_ZRS"; diskSizeGB="1024"; diskState="Attached"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Compute/disks/vm-sql-01_datadisk" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-infra";     name="orphan-disk-01"; location="eastus"; sku="Standard_LRS"; diskSizeGB="64"; diskState="Unattached"; id="/subscriptions/$subId/resourceGroups/rg-infra/providers/Microsoft.Compute/disks/orphan-disk-01" }
+)
+
+# ---- networking (resource-level list of network components) ----
+Export-Demo -Name "networking" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="vnet-hub";  type="microsoft.network/virtualnetworks";        location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="vnet-app";  type="microsoft.network/virtualnetworks";        location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="fw-hub";    type="microsoft.network/azurefirewalls";         location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/azureFirewalls/fw-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="ergw-hub";  type="microsoft.network/virtualnetworkgateways"; location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworkGateways/ergw-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="agw-web";   type="microsoft.network/applicationgateways";    location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/applicationGateways/agw-web" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="nsg-web";   type="microsoft.network/networksecuritygroups";  location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/networkSecurityGroups/nsg-web" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="pe-sql";    type="microsoft.network/privateendpoints";       location="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/privateEndpoints/pe-sql" }
+)
+
+# ---- vnets-subnets (with subnet features) ----
+Export-Demo -Name "vnets-subnets" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; vnetName="vnet-hub"; location="eastus"; addressPrefixes="[""10.0.0.0/16""]"; subnetName="GatewaySubnet";    subnetPrefix="10.0.255.0/27"; subnetPrefixes=""; serviceEndpoints="";                    delegatedService="";                            isDelegated="False"; privateEndpointNetworkPolicies="Disabled"; privateLinkServiceNetworkPolicies="Enabled"; defaultOutboundAccess="true";  natGatewayId=""; routeTableId=""; nsgId=""; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; vnetName="vnet-hub"; location="eastus"; addressPrefixes="[""10.0.0.0/16""]"; subnetName="AzureFirewallSubnet"; subnetPrefix="10.0.1.0/26"; subnetPrefixes=""; serviceEndpoints="";                delegatedService="";                            isDelegated="False"; privateEndpointNetworkPolicies="Disabled"; privateLinkServiceNetworkPolicies="Enabled"; defaultOutboundAccess="true";  natGatewayId=""; routeTableId=""; nsgId=""; id="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    vnetName="vnet-app"; location="eastus"; addressPrefixes="[""10.1.0.0/16""]"; subnetName="snet-web";        subnetPrefix="10.1.1.0/24"; subnetPrefixes=""; serviceEndpoints="Microsoft.Storage, Microsoft.KeyVault"; delegatedService="";               isDelegated="False"; privateEndpointNetworkPolicies="Enabled";  privateLinkServiceNetworkPolicies="Enabled"; defaultOutboundAccess="false"; natGatewayId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/natGateways/ngw-app"; routeTableId=""; nsgId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/networkSecurityGroups/nsg-web"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    vnetName="vnet-app"; location="eastus"; addressPrefixes="[""10.1.0.0/16""]"; subnetName="snet-cae";        subnetPrefix="10.1.4.0/23"; subnetPrefixes=""; serviceEndpoints="";                    delegatedService="Microsoft.App/environments"; isDelegated="True";  privateEndpointNetworkPolicies="Disabled"; privateLinkServiceNetworkPolicies="Enabled"; defaultOutboundAccess="false"; natGatewayId=""; routeTableId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/routeTables/udr-to-fw"; nsgId=""; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    vnetName="vnet-app"; location="eastus"; addressPrefixes="[""10.1.0.0/16""]"; subnetName="snet-pe";         subnetPrefix="10.1.2.0/24"; subnetPrefixes=""; serviceEndpoints="";                    delegatedService="";                            isDelegated="False"; privateEndpointNetworkPolicies="Disabled"; privateLinkServiceNetworkPolicies="Enabled"; defaultOutboundAccess="false"; natGatewayId=""; routeTableId=""; nsgId=""; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app" }
+)
+
+# ---- nsg-rules (with plural prefix/port + ASG fields) ----
+Export-Demo -Name "nsg-rules" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; nsgName="nsg-web"; location="eastus"; ruleName="Allow-HTTPS-In"; direction="Inbound"; access="Allow"; protocol="Tcp"; priority="100"; sourceAddressPrefix="Internet"; sourceAddressPrefixes="[]"; sourceApplicationSecurityGroups="[]"; sourcePortRange="*"; sourcePortRanges="[]"; destinationAddressPrefix="";  destinationAddressPrefixes="[""10.1.1.0/24""]"; destinationApplicationSecurityGroups="[]"; destinationPortRange="443"; destinationPortRanges="[]"; id="nsg-web/Allow-HTTPS-In" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; nsgName="nsg-web"; location="eastus"; ruleName="Allow-App-From-ASG"; direction="Inbound"; access="Allow"; protocol="Tcp"; priority="110"; sourceAddressPrefix=""; sourceAddressPrefixes="[]"; sourceApplicationSecurityGroups="[""asg-web""]"; sourcePortRange="*"; sourcePortRanges="[]"; destinationAddressPrefix=""; destinationAddressPrefixes="[]"; destinationApplicationSecurityGroups="[""asg-app""]"; destinationPortRange=""; destinationPortRanges="[""8080"",""8443""]"; id="nsg-web/Allow-App-From-ASG" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; nsgName="nsg-web"; location="eastus"; ruleName="Deny-All-Inbound"; direction="Inbound"; access="Deny"; protocol="*"; priority="4096"; sourceAddressPrefix="*"; sourceAddressPrefixes="[]"; sourceApplicationSecurityGroups="[]"; sourcePortRange="*"; sourcePortRanges="[]"; destinationAddressPrefix="*"; destinationAddressPrefixes="[]"; destinationApplicationSecurityGroups="[]"; destinationPortRange="*"; destinationPortRanges="[]"; id="nsg-web/Deny-All-Inbound" }
+)
+
+# ---- private-endpoints ----
+Export-Demo -Name "private-endpoints" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="pe-sql";  location="eastus"; subnetId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe"; privateLinkServiceConnections="[{""name"":""pe-sql"",""properties"":{""privateLinkServiceId"":"".../servers/sql-prod"",""groupIds"":[""sqlServer""]}}]"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/privateEndpoints/pe-sql" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; name="pe-kv";   location="eastus"; subnetId="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe"; privateLinkServiceConnections="[{""name"":""pe-kv"",""properties"":{""privateLinkServiceId"":"".../vaults/kv-prod"",""groupIds"":[""vault""]}}]"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.Network/privateEndpoints/pe-kv" }
+)
+
+# ---- vnet-connections (what is attached to each VNet: NICs, PEs, delegations) ----
+Export-Demo -Name "vnet-connections" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; vnetName="vnet-app"; subnetName="snet-web"; connectionType="NIC";             attachedResource="vm-web-01-nic"; attachedType="microsoft.network/networkinterfaces"; serviceName="";                            subnetId=".../vnet-app/subnets/snet-web" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; vnetName="vnet-app"; subnetName="snet-pe";  connectionType="PrivateEndpoint"; attachedResource="pe-sql";        attachedType="microsoft.network/privateendpoints";  serviceName="";                            subnetId=".../vnet-app/subnets/snet-pe" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; vnetName="vnet-app"; subnetName="snet-pe";  connectionType="PrivateEndpoint"; attachedResource="pe-kv";         attachedType="microsoft.network/privateendpoints";  serviceName="";                            subnetId=".../vnet-app/subnets/snet-pe" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; vnetName="vnet-app"; subnetName="snet-cae"; connectionType="Delegation";      attachedResource="";              attachedType="";                                    serviceName="Microsoft.App/environments"; subnetId=".../vnet-app/subnets/snet-cae" }
+)
+
+# ---- network-edge (gateways, firewall, ExpressRoute, App Gateway, Front Door, Bastion, NAT) ----
+Export-Demo -Name "network-edge" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="ergw-hub";   type="microsoft.network/virtualnetworkgateways"; location="eastus"; category="VNetGateway:ExpressRoute"; gatewayType="ExpressRoute"; vpnType="";       skuName="ErGw1AZ";                activeActive="false"; circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../virtualNetworkGateways/ergw-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="vpngw-hub";  type="microsoft.network/virtualnetworkgateways"; location="eastus"; category="VNetGateway:Vpn";         gatewayType="Vpn";         vpnType="RouteBased"; skuName="VpnGw2AZ";           activeActive="true";  circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../virtualNetworkGateways/vpngw-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="er-primary";  type="microsoft.network/expressroutecircuits";   location="eastus"; category="ExpressRouteCircuit";     gatewayType="";            vpnType="";       skuName="Standard_MeteredData"; activeActive="";      circuitProvider="Equinix"; circuitPeeringLocation="Washington DC"; circuitBandwidthMbps="1000"; appGwTier=""; wafEnabled=""; id=".../expressRouteCircuits/er-primary" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="fw-hub";      type="microsoft.network/azurefirewalls";         location="eastus"; category="AzureFirewall";           gatewayType="";            vpnType="";       skuName="AZFW_VNet";             activeActive="";      circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../azureFirewalls/fw-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="fw-policy";   type="microsoft.network/firewallpolicies";       location="eastus"; category="FirewallPolicy";          gatewayType="";            vpnType="";       skuName="Premium";               activeActive="";      circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../firewallPolicies/fw-policy" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="agw-web";     type="microsoft.network/applicationgateways";    location="eastus"; category="ApplicationGateway";      gatewayType="";            vpnType="";       skuName="WAF_v2";                activeActive="";      circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier="WAF_v2"; wafEnabled="true"; id=".../applicationGateways/agw-web" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="afd-prod";    type="microsoft.cdn/profiles";                   location="global"; category="FrontDoor/CDN:Premium_AzureFrontDoor"; gatewayType="";       vpnType="";       skuName="Premium_AzureFrontDoor"; activeActive="";     circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../profiles/afd-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-network-hub"; name="bastion-hub"; type="microsoft.network/bastionhosts";           location="eastus"; category="Bastion";                gatewayType="";            vpnType="";       skuName="Standard";              activeActive="";      circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../bastionHosts/bastion-hub" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    name="ngw-app";     type="microsoft.network/natgateways";            location="eastus"; category="NatGateway";              gatewayType="";            vpnType="";       skuName="Standard";              activeActive="";      circuitProvider="";        circuitPeeringLocation=""; circuitBandwidthMbps=""; appGwTier=""; wafEnabled=""; id=".../natGateways/ngw-app" }
+)
+
+# ---- key-vaults ----
+Export-Demo -Name "key-vaults" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; name="kv-prod"; location="eastus"; enableRbacAuthorization="false"; publicNetworkAccess="Disabled"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; name="kv-cmk";  location="eastus"; enableRbacAuthorization="true";  publicNetworkAccess="Disabled"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-cmk" }
+)
+
+# ---- log-analytics-workspaces ----
+Export-Demo -Name "log-analytics-workspaces" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-infra"; name="law-monitoring-prod"; location="eastus"; customerId="33333333-3333-3333-3333-333333333333"; sku="PerGB2018"; id="/subscriptions/$subId/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod" }
+)
+
+# ---- app-insights-components ----
+Export-Demo -Name "app-insights-components" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="ai-storefront-prod"; location="eastus"; appId="44444444-4444-4444-4444-444444444444"; applicationType="web"; workspaceResourceId="/subscriptions/$subId/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Insights/components/ai-storefront-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="ai-identity-prod";   location="eastus"; appId="55555555-5555-5555-5555-555555555555"; applicationType="web"; workspaceResourceId="/subscriptions/$subId/resourceGroups/rg-infra/providers/Microsoft.OperationalInsights/workspaces/law-monitoring-prod"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Insights/components/ai-identity-prod" }
+)
+
+# ---- policy-assignments ----
+Export-Demo -Name "policy-assignments" -Data @(
+    [pscustomobject]@{ subscriptionId=$subId; subscriptionName="Prod-Landing-Zone"; Name="require-tag-env";  DisplayName="Require env tag on resources"; PolicyDefinitionId="/providers/Microsoft.Authorization/policyDefinitions/require-tag"; Scope="/subscriptions/$subId"; EnforcementMode="Default" }
+    [pscustomobject]@{ subscriptionId=$subId; subscriptionName="Prod-Landing-Zone"; Name="deny-public-ip";   DisplayName="Deny public IP on NICs";        PolicyDefinitionId="/providers/Microsoft.Authorization/policyDefinitions/deny-public-ip"; Scope="/subscriptions/$subId"; EnforcementMode="Default" }
+    [pscustomobject]@{ subscriptionId=$subId; subscriptionName="Prod-Landing-Zone"; Name="allowed-locations"; DisplayName="Allowed locations";           PolicyDefinitionId="/providers/Microsoft.Authorization/policyDefinitions/allowed-locations"; Scope="/subscriptions/$subId"; EnforcementMode="Default" }
+)
+
 # ---- storage-accounts ----
 $storage = @(
     [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";  name="stprodassets";   location="eastus"; sku="Standard_LRS"; kind="StorageV2"; accessTier="Hot";  publicNetworkAccess="Disabled"; allowBlobPublicAccess="false"; supportsHttpsTrafficOnly="true"; minimumTlsVersion="TLS1_2"; isHnsEnabled="false"; primaryLocation="eastus"; tags="{}"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Storage/storageAccounts/stprodassets" }

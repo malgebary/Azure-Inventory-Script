@@ -1,0 +1,4 @@
+"subscriptionId","subscriptionName","Name","DisplayName","PolicyDefinitionId","Scope","EnforcementMode"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","require-tag-env","Require env tag on resources","/providers/Microsoft.Authorization/policyDefinitions/require-tag","/subscriptions/11111111-1111-1111-1111-111111111111","Default"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","deny-public-ip","Deny public IP on NICs","/providers/Microsoft.Authorization/policyDefinitions/deny-public-ip","/subscriptions/11111111-1111-1111-1111-111111111111","Default"
+"11111111-1111-1111-1111-111111111111","Prod-Landing-Zone","allowed-locations","Allowed locations","/providers/Microsoft.Authorization/policyDefinitions/allowed-locations","/subscriptions/11111111-1111-1111-1111-111111111111","Default"

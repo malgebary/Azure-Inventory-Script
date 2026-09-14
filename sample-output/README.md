@@ -22,20 +22,33 @@ vm-web-01 / vm-web-02  --(8080)-->  vm-app-01  --(1433)-->  vm-sql-01
 
 | File | Shows |
 | --- | --- |
-| `vm-insights-connections.csv` | VM-to-VM traffic (source → destination IP/port/process, counts, bytes) |
-| `app-insights-dependencies.csv` | App → backend calls (SQL, HTTP, blob, Service Bus, Key Vault) |
+| `management-groups.csv`, `management-group-hierarchy.csv` | Management group tree |
+| `subscriptions.csv`, `resource-groups.csv` | Subscriptions and resource groups |
+| `resources.csv` | The complete unfiltered inventory (representative slice) |
+| `resource-summary-by-type.csv` | Resource counts by type |
+| `virtual-machines.csv`, `disks.csv` | VM and disk inventory |
+| `networking.csv` | All network resources (VNets, firewall, gateways, App Gateway, Front Door, Bastion, NAT, etc.) |
+| `network-edge.csv` | Edge detail — VPN/ER gateway type + SKU, ER circuit bandwidth/provider, App Gateway WAF, Front Door, Bastion, NAT |
+| `vnets-subnets.csv` | VNet IP ranges + per-subnet features (service endpoints, delegation, PE policies, default outbound access) |
+| `vnet-peerings.csv` | Structural connectivity (hub ↔ spoke) |
+| `vnet-connections.csv` | What's attached to each VNet/subnet — NICs, private endpoints, delegated services |
+| `nsg-rules.csv` | NSG rules incl. multi-prefix and ASG source/destination |
+| `private-endpoints.csv` | Private endpoints and their target resources |
+| `key-vaults.csv` | Vaults (RBAC mode, public access) |
+| `key-vault-access.csv` | Per-vault access policies (object IDs + key/secret/cert permissions); RBAC-mode vaults flagged |
+| `key-vault-references.csv` | Resources that reference a vault (App Service KV refs, disk encryption/CMK, private endpoints) |
+| `log-analytics-workspaces.csv`, `app-insights-components.csv` | Monitoring footprint |
+| `policy-assignments.csv` | Azure Policy assignments |
 | `role-assignments.csv` | RBAC with principal ObjectIds (incl. a CSP `ForeignGroup` example) |
 | `managed-identities.csv` | System/user-assigned identities with principal IDs |
-| `virtual-machines.csv` | VM context to correlate connection endpoints back to names |
-| `vnet-peerings.csv` | Structural connectivity (hub ↔ spoke) |
 | `storage-accounts.csv` | Storage inventory (SKU, tier, public access, HTTPS/TLS, hierarchical namespace) |
 | `storage-links.csv` | Configured storage relationships, **including DB → storage** (SQL auditing/VA targets) |
 | `databases.csv` | SQL DB, Cosmos DB, PostgreSQL flexible server, Redis |
 | `app-services-and-serverless.csv` | Web apps, Functions, App Service Plans, Logic Apps, Container Apps, ACR |
+| `vm-insights-connections.csv` | VM-to-VM traffic (source → destination IP/port/process, counts, bytes) |
+| `app-insights-dependencies.csv` | App → backend calls (SQL, HTTP, blob, Service Bus, Key Vault) |
 | `completeness-reconciliation.csv` | Every type + count + which sheet captures it; catch-all-only types flagged |
 | `completeness-summary.json` | Reconciles the total Resource Graph count vs `resources.csv` (`countsReconcile`) |
-| `key-vault-access.csv` | Per-vault access policies (object IDs + key/secret/cert permissions); RBAC-mode vaults flagged |
-| `key-vault-references.csv` | Resources that reference a vault (App Service KV refs, disk encryption/CMK, private endpoints) |
 
 ## How to read `completeness-reconciliation.csv`
 
