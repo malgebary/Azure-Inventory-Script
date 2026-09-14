@@ -48,12 +48,13 @@ one **CSV + JSON** file per dataset.
 | `app-services-and-serverless` | App Service, App Service Plans, Functions, Static Web Apps, Logic Apps, Container Apps + environments, API Management, ACR, Container Instances |
 | `virtual-machines`, `disks` | VM size/OS/power state/license; disk SKU/size |
 | `networking` | All network resources — VNets, NICs, NSGs, route tables, **Azure Firewall + policy, App Gateway, Front Door/CDN, Load Balancers, NAT Gateway, Bastion, VNet gateways (VPN/ER), ExpressRoute circuits, Virtual WAN/hubs, Route Server, DDoS, DNS Resolver**, public IPs |
-| `network-edge` | **Edge/connectivity detail** — for each gateway/firewall/ER/App Gateway/Front Door: type (VPN vs ExpressRoute), SKU, active-active, circuit bandwidth/provider/peering, WAF enabled |
+| `network-edge` | **Edge/connectivity detail** — for each gateway/firewall/ER/App Gateway/Front Door: type (VPN vs ExpressRoute), SKU, active-active, circuit bandwidth/provider/peering, **WAF enabled + WAF policy reference + WAF mode** (App Gateway & Front Door WAF policies included as resources) |
 | `vnets-subnets` | VNet address spaces (**IP ranges**) + per-subnet features: prefix, **service endpoints, delegation (VNet injection), private-endpoint/PLS network policies, default outbound access, NAT gateway, route table, NSG** |
 | `vnet-peerings` | **Structural connectivity** — which VNet connects to which |
 | `vnet-connections` | **What's attached to each VNet/subnet** — NICs, private endpoints, and delegated (injected) services |
 | `nsg-rules` | Every NSG rule (allowed/denied paths), incl. multi-prefix, port ranges, and ASG source/destination |
-| `private-endpoints` | Private endpoints and what they connect to |
+| `route-tables` | **UDR routes** — each route's destination prefix → next-hop type/IP, plus **gateway route propagation** (Enabled/Disabled) per route table |
+| `private-endpoints` | Private endpoints and **what each connects to** — target resource ID, target type (Key Vault, SQL, Storage, etc.), group ID, connection state |
 | `key-vaults` | Vaults, RBAC mode, public network access |
 | `key-vault-access` | Per-vault **access policies** — object IDs + key/secret/certificate permissions (who can access each vault) |
 | `key-vault-references` | Resources whose config **references a vault** — App Service KV references, CMK/disk encryption, private endpoints (what depends on each vault) |

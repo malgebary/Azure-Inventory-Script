@@ -33,7 +33,8 @@ vm-web-01 / vm-web-02  --(8080)-->  vm-app-01  --(1433)-->  vm-sql-01
 | `vnet-peerings.csv` | Structural connectivity (hub ↔ spoke) |
 | `vnet-connections.csv` | What's attached to each VNet/subnet — NICs, private endpoints, delegated services |
 | `nsg-rules.csv` | NSG rules incl. multi-prefix and ASG source/destination |
-| `private-endpoints.csv` | Private endpoints and their target resources |
+| `route-tables.csv` | UDR routes (destination → next hop) + gateway route propagation |
+| `private-endpoints.csv` | Private endpoints and their target resources (type, group ID, state) |
 | `key-vaults.csv` | Vaults (RBAC mode, public access) |
 | `key-vault-access.csv` | Per-vault access policies (object IDs + key/secret/cert permissions); RBAC-mode vaults flagged |
 | `key-vault-references.csv` | Resources that reference a vault (App Service KV refs, disk encryption/CMK, private endpoints) |

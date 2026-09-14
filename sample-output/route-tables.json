@@ -1,0 +1,41 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "routeTableName": "udr-to-fw",
+    "location": "eastus",
+    "gatewayRoutePropagation": "Disabled",
+    "disableBgpRoutePropagation": "true",
+    "routeName": "default-to-firewall",
+    "addressPrefix": "0.0.0.0/0",
+    "nextHopType": "VirtualAppliance",
+    "nextHopIpAddress": "10.0.1.4",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/routeTables/udr-to-fw"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "routeTableName": "udr-to-fw",
+    "location": "eastus",
+    "gatewayRoutePropagation": "Disabled",
+    "disableBgpRoutePropagation": "true",
+    "routeName": "to-onprem",
+    "addressPrefix": "10.100.0.0/16",
+    "nextHopType": "VirtualAppliance",
+    "nextHopIpAddress": "10.0.1.4",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/routeTables/udr-to-fw"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "routeTableName": "udr-pe-subnet",
+    "location": "eastus",
+    "gatewayRoutePropagation": "Enabled",
+    "disableBgpRoutePropagation": "false",
+    "routeName": "local-vnet",
+    "addressPrefix": "10.1.0.0/16",
+    "nextHopType": "VnetLocal",
+    "nextHopIpAddress": "",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/routeTables/udr-pe-subnet"
+  }
+]

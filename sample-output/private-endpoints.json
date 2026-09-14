@@ -5,7 +5,10 @@
     "name": "pe-sql",
     "location": "eastus",
     "subnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe",
-    "privateLinkServiceConnections": "[{\"name\":\"pe-sql\",\"properties\":{\"privateLinkServiceId\":\".../servers/sql-prod\",\"groupIds\":[\"sqlServer\"]}}]",
+    "targetResourceId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Sql/servers/sql-prod",
+    "targetResourceType": "Microsoft.Sql/servers",
+    "groupIds": "[\"sqlServer\"]",
+    "connectionState": "Approved",
     "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/privateEndpoints/pe-sql"
   },
   {
@@ -14,7 +17,22 @@
     "name": "pe-kv",
     "location": "eastus",
     "subnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe",
-    "privateLinkServiceConnections": "[{\"name\":\"pe-kv\",\"properties\":{\"privateLinkServiceId\":\".../vaults/kv-prod\",\"groupIds\":[\"vault\"]}}]",
+    "targetResourceId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod",
+    "targetResourceType": "Microsoft.KeyVault/vaults",
+    "groupIds": "[\"vault\"]",
+    "connectionState": "Approved",
     "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.Network/privateEndpoints/pe-kv"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "pe-storage",
+    "location": "eastus",
+    "subnetId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/virtualNetworks/vnet-app/subnets/snet-pe",
+    "targetResourceId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Storage/storageAccounts/stprodbackups",
+    "targetResourceType": "Microsoft.Storage/storageAccounts",
+    "groupIds": "[\"blob\"]",
+    "connectionState": "Approved",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Network/privateEndpoints/pe-storage"
   }
 ]

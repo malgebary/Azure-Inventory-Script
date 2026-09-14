@@ -251,7 +251,9 @@ Resources
     'microsoft.network/expressroutecircuits','microsoft.network/connections',
     'microsoft.network/virtualwans','microsoft.network/virtualhubs',
     'microsoft.network/virtualhubs/routeservers','microsoft.network/vpngateways',
-    'microsoft.network/expressroutegateways','microsoft.network/p2svpngateways')
+    'microsoft.network/expressroutegateways','microsoft.network/p2svpngateways',
+    'microsoft.network/applicationgatewaywebapplicationfirewallpolicies',
+    'microsoft.network/frontdoorwebapplicationfirewallpolicies')
 | project subscriptionId, resourceGroup, name, type, location, tags = tostring(tags), id
 | order by subscriptionId, resourceGroup, type, name
 "@
@@ -319,12 +321,34 @@ Resources
 | order by subscriptionId, resourceGroup, nsgName, priority
 "@
 
+  "route-tables" = @"
+Resources
+| where type =~ 'microsoft.network/routetables'
+| extend gatewayRoutePropagation = iff(tobool(properties.disableBgpRoutePropagation) == true, 'Disabled', 'Enabled')
+| mv-expand route = properties.routes to typeof(dynamic)
+| project subscriptionId, resourceGroup, routeTableName = name, location,
+          gatewayRoutePropagation,
+          disableBgpRoutePropagation = tostring(properties.disableBgpRoutePropagation),
+          routeName = tostring(route.name),
+          addressPrefix = tostring(route.properties.addressPrefix),
+          nextHopType = tostring(route.properties.nextHopType),
+          nextHopIpAddress = tostring(route.properties.nextHopIpAddress),
+          id
+| order by subscriptionId, resourceGroup, routeTableName, addressPrefix
+"@
+
   "private-endpoints" = @"
 Resources
 | where type =~ 'microsoft.network/privateendpoints'
+| extend conn = coalesce(properties.privateLinkServiceConnections, properties.manualPrivateLinkServiceConnections)
+| extend conn0 = conn[0]
+| extend targetResourceId = tostring(conn0.properties.privateLinkServiceId)
+| extend targetResourceType = tostring(strcat_array(array_slice(split(targetResourceId, '/'), 6, 7), '/'))
+| extend groupIds = tostring(conn0.properties.groupIds)
+| extend connectionState = tostring(conn0.properties.privateLinkServiceConnectionState.status)
 | project subscriptionId, resourceGroup, name, location,
           subnetId = tostring(properties.subnet.id),
-          privateLinkServiceConnections = tostring(properties.privateLinkServiceConnections),
+          targetResourceId, targetResourceType, groupIds, connectionState,
           id
 | order by subscriptionId, resourceGroup, name
 "@
@@ -365,7 +389,10 @@ Resources
     'microsoft.cdn/profiles','microsoft.network/bastionhosts',
     'microsoft.network/natgateways','microsoft.network/virtualwans',
     'microsoft.network/virtualhubs','microsoft.network/vpngateways',
-    'microsoft.network/expressroutegateways','microsoft.network/ddosprotectionplans')
+    'microsoft.network/expressroutegateways','microsoft.network/ddosprotectionplans',
+    'microsoft.network/applicationgatewaywebapplicationfirewallpolicies',
+    'microsoft.network/frontdoorwebapplicationfirewallpolicies',
+    'microsoft.cdn/profiles/securitypolicies')
 | extend category = case(
     type =~ 'microsoft.network/virtualnetworkgateways', strcat('VNetGateway:', tostring(properties.gatewayType)),
     type =~ 'microsoft.network/expressroutecircuits', 'ExpressRouteCircuit',
@@ -381,6 +408,9 @@ Resources
     type =~ 'microsoft.network/vpngateways', 'vWAN-VpnGateway',
     type =~ 'microsoft.network/expressroutegateways', 'vWAN-ExpressRouteGateway',
     type =~ 'microsoft.network/ddosprotectionplans', 'DdosProtectionPlan',
+    type =~ 'microsoft.network/applicationgatewaywebapplicationfirewallpolicies', 'WAFPolicy(AppGw)',
+    type =~ 'microsoft.network/frontdoorwebapplicationfirewallpolicies', 'WAFPolicy(FrontDoor)',
+    type =~ 'microsoft.cdn/profiles/securitypolicies', 'WAFPolicy(FrontDoorStd/Prem)',
     'Other')
 | extend gatewayType = tostring(properties.gatewayType)
 | extend vpnType = tostring(properties.vpnType)
@@ -390,11 +420,17 @@ Resources
 | extend circuitProvider = tostring(properties.serviceProviderProperties.serviceProviderName)
 | extend circuitPeeringLocation = tostring(properties.serviceProviderProperties.peeringLocation)
 | extend appGwTier = tostring(properties.sku.tier)
-| extend wafEnabled = tostring(properties.webApplicationFirewallConfiguration.enabled)
+| extend wafEnabled = case(
+    type =~ 'microsoft.network/applicationgateways' and isnotempty(tostring(properties.firewallPolicy.id)), 'true (via policy)',
+    type =~ 'microsoft.network/applicationgateways', tostring(properties.webApplicationFirewallConfiguration.enabled),
+    isnotempty(tostring(properties.policySettings.state)), tostring(properties.policySettings.state),
+    '')
+| extend wafPolicyId = coalesce(tostring(properties.firewallPolicy.id), tostring(properties.webApplicationFirewallConfiguration.firewallPolicy.id))
+| extend wafMode = tostring(properties.policySettings.mode)
 | project subscriptionId, resourceGroup, name, type, location, category,
           gatewayType, vpnType, skuName, activeActive,
           circuitProvider, circuitPeeringLocation, circuitBandwidthMbps,
-          appGwTier, wafEnabled, id
+          appGwTier, wafEnabled, wafPolicyId, wafMode, id
 | order by subscriptionId, category, name
 "@
 

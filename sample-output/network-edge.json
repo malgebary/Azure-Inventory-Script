@@ -15,6 +15,8 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../virtualNetworkGateways/ergw-hub"
   },
   {
@@ -33,6 +35,8 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../virtualNetworkGateways/vpngw-hub"
   },
   {
@@ -51,6 +55,8 @@
     "circuitBandwidthMbps": "1000",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../expressRouteCircuits/er-primary"
   },
   {
@@ -69,6 +75,8 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../azureFirewalls/fw-hub"
   },
   {
@@ -87,6 +95,8 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../firewallPolicies/fw-policy"
   },
   {
@@ -104,8 +114,30 @@
     "circuitPeeringLocation": "",
     "circuitBandwidthMbps": "",
     "appGwTier": "WAF_v2",
-    "wafEnabled": "true",
+    "wafEnabled": "true (via policy)",
+    "wafPolicyId": ".../ApplicationGatewayWebApplicationFirewallPolicies/waf-appgw",
+    "wafMode": "",
     "id": ".../applicationGateways/agw-web"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "waf-appgw",
+    "type": "microsoft.network/applicationgatewaywebapplicationfirewallpolicies",
+    "location": "eastus",
+    "category": "WAFPolicy(AppGw)",
+    "gatewayType": "",
+    "vpnType": "",
+    "skuName": "",
+    "activeActive": "",
+    "circuitProvider": "",
+    "circuitPeeringLocation": "",
+    "circuitBandwidthMbps": "",
+    "appGwTier": "",
+    "wafEnabled": "Enabled",
+    "wafPolicyId": "",
+    "wafMode": "Prevention",
+    "id": ".../ApplicationGatewayWebApplicationFirewallPolicies/waf-appgw"
   },
   {
     "subscriptionId": "11111111-1111-1111-1111-111111111111",
@@ -123,7 +155,29 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../profiles/afd-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "waf-afd",
+    "type": "microsoft.network/frontdoorwebapplicationfirewallpolicies",
+    "location": "global",
+    "category": "WAFPolicy(FrontDoor)",
+    "gatewayType": "",
+    "vpnType": "",
+    "skuName": "",
+    "activeActive": "",
+    "circuitProvider": "",
+    "circuitPeeringLocation": "",
+    "circuitBandwidthMbps": "",
+    "appGwTier": "",
+    "wafEnabled": "Enabled",
+    "wafPolicyId": "",
+    "wafMode": "Prevention",
+    "id": ".../FrontDoorWebApplicationFirewallPolicies/waf-afd"
   },
   {
     "subscriptionId": "11111111-1111-1111-1111-111111111111",
@@ -141,6 +195,8 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../bastionHosts/bastion-hub"
   },
   {
@@ -159,6 +215,8 @@
     "circuitBandwidthMbps": "",
     "appGwTier": "",
     "wafEnabled": "",
+    "wafPolicyId": "",
+    "wafMode": "",
     "id": ".../natGateways/ngw-app"
   }
 ]
