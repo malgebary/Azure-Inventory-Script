@@ -53,6 +53,8 @@ one **CSV + JSON** file per dataset.
 | `nsg-rules` | Every NSG rule (allowed/denied paths) |
 | `private-endpoints` | Private endpoints and what they connect to |
 | `key-vaults` | Vaults, RBAC mode, public network access |
+| `key-vault-access` | Per-vault **access policies** — object IDs + key/secret/certificate permissions (who can access each vault) |
+| `key-vault-references` | Resources whose config **references a vault** — App Service KV references, CMK/disk encryption, private endpoints (what depends on each vault) |
 | `managed-identities` | System/user-assigned identities + **principal IDs** |
 | `log-analytics-workspaces`, `app-insights-components` | Monitoring footprint (discovery) |
 | `role-assignments` *(optional)* | **RBAC** — who has what, with principal ObjectIds |
@@ -248,6 +250,25 @@ Each row is a resource whose **configuration** points at a storage account. This
 
 In short: **`storage-links` shows configured DB→storage relationships, not live PaaS
 database-to-storage traffic** (which Azure does not expose).
+
+### Key Vault — `key-vault-access.csv` and `key-vault-references.csv`
+
+Two views map the Key Vault dependency picture from configuration (always produced):
+
+- **`key-vault-access.csv`** — one row per **access policy** on each vault: the object ID
+  and its key/secret/certificate permissions. This answers *"who/what can access this
+  vault?"* For **RBAC-mode** vaults (`rbacMode = true`) access is granted via role
+  assignments instead — see `role-assignments.csv` (run with `-IncludeRoleAssignments`)
+  and filter to the vault's scope.
+- **`key-vault-references.csv`** — resources whose **config points at a vault**
+  (`*.vault.azure.net` or a vault resource ID): App Service **Key Vault references**,
+  **disk encryption sets / customer-managed keys (CMK)**, SQL TDE with CMK, private
+  endpoints, and more. This answers *"what breaks if this vault moves?"* — a CMK-encrypted
+  resource can't move without its key.
+
+Same honesty caveat as storage: these show **configured** access and references. Live
+runtime secret fetches only appear where an app is instrumented with App Insights
+(`app-insights-dependencies`).
 
 ---
 

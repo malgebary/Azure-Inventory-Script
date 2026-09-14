@@ -315,6 +315,34 @@ Resources
 | order by subscriptionId, resourceGroup, name
 "@
 
+  "key-vault-access" = @"
+Resources
+| where type =~ 'microsoft.keyvault/vaults'
+| extend rbacMode = tostring(properties.enableRbacAuthorization)
+| mv-expand ap = properties.accessPolicies
+| project subscriptionId, resourceGroup, vaultName = name, location, rbacMode,
+          tenantId = tostring(ap.tenantId),
+          objectId = tostring(ap.objectId),
+          keyPermissions = tostring(ap.permissions.keys),
+          secretPermissions = tostring(ap.permissions.secrets),
+          certificatePermissions = tostring(ap.permissions.certificates),
+          id
+| order by subscriptionId, resourceGroup, vaultName
+"@
+
+  "key-vault-references" = @"
+Resources
+| where type !in~ ('microsoft.keyvault/vaults')
+| extend p = tostring(properties)
+| where p has '.vault.azure.net' or p has '/providers/Microsoft.KeyVault/vaults/'
+| extend referencedVaultHost = extract(@'(?i)([a-z0-9-]+)\.vault\.azure\.net', 1, p)
+| extend referencedVaultId = extract(@'(?i)(/subscriptions/[^\"]+?/providers/Microsoft\.KeyVault/vaults/[^\"/]+)', 1, p)
+| where isnotempty(referencedVaultHost) or isnotempty(referencedVaultId)
+| project subscriptionId, resourceGroup, name, type,
+          referencedVaultHost, referencedVaultId, id
+| order by subscriptionId, resourceGroup, type, name
+"@
+
   "managed-identities" = @"
 Resources
 | where isnotempty(identity.type)

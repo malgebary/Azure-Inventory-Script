@@ -17,6 +17,8 @@ you can preview exactly what the customer will see for:
   - storage-accounts          (storage inventory with config)
   - databases                 (SQL / Cosmos / PostgreSQL / Redis)
   - app-services-and-serverless (web apps, functions, logic apps, container apps, ACR)
+  - key-vault-access          (who can access each vault)
+  - key-vault-references      (what resources depend on each vault)
   - completeness-reconciliation + completeness-summary.json (the "capturing everything" proof)
 
 NONE of this is real. It is safe to commit and safe to share as an example.
@@ -109,6 +111,23 @@ $peer = @(
     [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod";    localVnet="vnet-app"; location="eastus"; peeringName="app-to-hub"; peeringState="Connected"; remoteVnetId="/subscriptions/$subId/resourceGroups/rg-network-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"; allowForwardedTraffic="False"; allowGatewayTransit="False"; useRemoteGateways="True"; id="peer2" }
 )
 Export-Demo -Name "vnet-peerings" -Data $peer
+
+# ---- key-vault-access (who can access each vault) ----
+$kvAccess = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; vaultName="kv-prod"; location="eastus"; rbacMode="false"; tenantId="22222222-2222-2222-2222-222222222222"; objectId="a1b2c3d4-0001-4000-8000-000000000004"; keyPermissions="[""get"",""wrapKey"",""unwrapKey""]"; secretPermissions="[""get"",""list""]"; certificatePermissions="[]"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; vaultName="kv-prod"; location="eastus"; rbacMode="false"; tenantId="22222222-2222-2222-2222-222222222222"; objectId="b2c3d4e5-0002-4000-8000-000000000002"; keyPermissions="[]"; secretPermissions="[""get""]"; certificatePermissions="[]"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; vaultName="kv-cmk";  location="eastus"; rbacMode="true";  tenantId="22222222-2222-2222-2222-222222222222"; objectId="";                                   keyPermissions="";               secretPermissions="";           certificatePermissions="";   id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-cmk" }
+)
+Export-Demo -Name "key-vault-access" -Data $kvAccess
+
+# ---- key-vault-references (what depends on each vault) ----
+$kvRefs = @(
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="app-storefront"; type="microsoft.web/sites";                  referencedVaultHost="kv-prod"; referencedVaultId="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/app-storefront" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-app-prod"; name="ca-api";         type="microsoft.app/containerapps";        referencedVaultHost="kv-prod"; referencedVaultId="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod"; id="/subscriptions/$subId/resourceGroups/rg-app-prod/providers/Microsoft.App/containerApps/ca-api" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-data-prod"; name="des-prod";      type="microsoft.compute/diskencryptionsets"; referencedVaultHost="kv-cmk"; referencedVaultId="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-cmk"; id="/subscriptions/$subId/resourceGroups/rg-data-prod/providers/Microsoft.Compute/diskEncryptionSets/des-prod" }
+    [pscustomobject]@{ subscriptionId=$subId; resourceGroup="rg-security"; name="pe-kv";          type="microsoft.network/privateendpoints"; referencedVaultHost="kv-prod"; referencedVaultId="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod"; id="/subscriptions/$subId/resourceGroups/rg-security/providers/Microsoft.Network/privateEndpoints/pe-kv" }
+)
+Export-Demo -Name "key-vault-references" -Data $kvRefs
 
 # ---- storage-accounts ----
 $storage = @(

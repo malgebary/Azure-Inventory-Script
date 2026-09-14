@@ -10,8 +10,8 @@
     "connections": 48213,
     "bytesSent": 1820394112,
     "bytesReceived": 5502398112,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -24,8 +24,8 @@
     "connections": 47110,
     "bytesSent": 1790112044,
     "bytesReceived": 5410221904,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -38,8 +38,8 @@
     "connections": 90412,
     "bytesSent": 980221104,
     "bytesReceived": 44102338910,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -52,8 +52,8 @@
     "connections": 12203,
     "bytesSent": 2210432,
     "bytesReceived": 3120933,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -66,8 +66,8 @@
     "connections": 8109,
     "bytesSent": 1220432,
     "bytesReceived": 2120933,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -80,8 +80,8 @@
     "connections": 6410,
     "bytesSent": 920432,
     "bytesReceived": 1120933,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -94,8 +94,8 @@
     "connections": 5122,
     "bytesSent": 812433,
     "bytesReceived": 1020933,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   },
   {
     "workspaceName": "law-monitoring-prod",
@@ -108,7 +108,7 @@
     "connections": 21044,
     "bytesSent": 410220112,
     "bytesReceived": 1802204410,
-    "firstSeen": "2026-08-14T20:17:19.1723806Z",
-    "lastSeen": "2026-09-13T20:17:19.1723806Z"
+    "firstSeen": "2026-08-15T02:37:24.1770350Z",
+    "lastSeen": "2026-09-14T02:37:24.1770350Z"
   }
 ]

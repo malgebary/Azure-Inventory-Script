@@ -1,0 +1,38 @@
+[
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "app-storefront",
+    "type": "microsoft.web/sites",
+    "referencedVaultHost": "kv-prod",
+    "referencedVaultId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.Web/sites/app-storefront"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-app-prod",
+    "name": "ca-api",
+    "type": "microsoft.app/containerapps",
+    "referencedVaultHost": "kv-prod",
+    "referencedVaultId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-app-prod/providers/Microsoft.App/containerApps/ca-api"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-data-prod",
+    "name": "des-prod",
+    "type": "microsoft.compute/diskencryptionsets",
+    "referencedVaultHost": "kv-cmk",
+    "referencedVaultId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-cmk",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-data-prod/providers/Microsoft.Compute/diskEncryptionSets/des-prod"
+  },
+  {
+    "subscriptionId": "11111111-1111-1111-1111-111111111111",
+    "resourceGroup": "rg-security",
+    "name": "pe-kv",
+    "type": "microsoft.network/privateendpoints",
+    "referencedVaultHost": "kv-prod",
+    "referencedVaultId": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.KeyVault/vaults/kv-prod",
+    "id": "/subscriptions/11111111-1111-1111-1111-111111111111/resourceGroups/rg-security/providers/Microsoft.Network/privateEndpoints/pe-kv"
+  }
+]

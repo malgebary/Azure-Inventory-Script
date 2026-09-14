@@ -1,5 +1,5 @@
 {
   "note": "FABRICATED DEMO DATA - not from any real Azure environment",
-  "generatedAtUtc": "2026-09-13T20:17:19.1723806Z",
+  "generatedAtUtc": "2026-09-14T02:37:24.1770350Z",
   "scenario": "3-tier app (web->app->sql) with DC dependencies, plus app-tier backend calls"
 }

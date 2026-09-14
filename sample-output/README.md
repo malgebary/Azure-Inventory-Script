@@ -33,6 +33,8 @@ vm-web-01 / vm-web-02  --(8080)-->  vm-app-01  --(1433)-->  vm-sql-01
 | `app-services-and-serverless.csv` | Web apps, Functions, App Service Plans, Logic Apps, Container Apps, ACR |
 | `completeness-reconciliation.csv` | Every type + count + which sheet captures it; catch-all-only types flagged |
 | `completeness-summary.json` | Reconciles the total Resource Graph count vs `resources.csv` (`countsReconcile`) |
+| `key-vault-access.csv` | Per-vault access policies (object IDs + key/secret/cert permissions); RBAC-mode vaults flagged |
+| `key-vault-references.csv` | Resources that reference a vault (App Service KV refs, disk encryption/CMK, private endpoints) |
 
 ## How to read `completeness-reconciliation.csv`
 
