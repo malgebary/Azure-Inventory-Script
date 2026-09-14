@@ -227,6 +227,28 @@ Each row is an **observed connection** from one VM to a destination IP/port/proc
 LDAP `389`, Kerberos `88`). Correlate destination IPs back to `virtual-machines.csv` /
 `networking.csv` to name both ends.
 
+### Storage relationships — `storage-links.csv`
+
+Each row is a resource whose **configuration** points at a storage account. This captures
+**configured** relationships (not live traffic), including database→storage links such as:
+
+- **SQL auditing**, **vulnerability assessment**, and **extended auditing** targets — i.e.
+  a SQL Server/database configured to write audit logs or VA scans to a storage account.
+- VM boot diagnostics, Function/Web App storage, Event Grid system topics, and any
+  resource whose properties reference a storage account or a `*.core.windows.net` endpoint.
+
+**What it does NOT capture:**
+
+| Relationship | Captured? |
+| --- | --- |
+| DB configured to write auditing / VA / backup to a storage account | ✅ Yes (`storage-links`) |
+| SQL **on an Azure VM** writing backups to blob (live traffic) | ⚠️ Only if that VM has VM Insights enabled → appears in `vm-insights-connections` |
+| **Azure SQL DB / Managed Instance (PaaS)** internal reads/writes to storage | ❌ No — internal Azure plumbing, not observable to any tool |
+| A database engine querying storage at runtime | ❌ No — Azure exposes no telemetry for this |
+
+In short: **`storage-links` shows configured DB→storage relationships, not live PaaS
+database-to-storage traffic** (which Azure does not expose).
+
 ---
 
 ## Coverage & limitations (read this)

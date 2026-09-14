@@ -60,6 +60,14 @@ Each row = one type of outbound call an app makes to a backend.
 queue, and the external payments API must all be accounted for in the same
 migration wave.
 
+## A note on DB → storage
+
+Database-to-storage relationships show up in `storage-links.csv` when they are
+**configured** — e.g. SQL auditing, vulnerability assessment, or backup targets pointed at
+a storage account. **Live PaaS database-to-storage traffic is not captured** (Azure SQL /
+Managed Instance internals aren't observable). See the "Storage relationships" and
+"Coverage & limitations" sections in the top-level README for the full breakdown.
+
 ## Regenerate
 
 ```powershell
